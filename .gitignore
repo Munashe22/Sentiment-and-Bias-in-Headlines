@@ -1,0 +1,2 @@
+data/cleaned_data_*.parquet
+data/sentiment_data_*.parquet

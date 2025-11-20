@@ -1,2 +1,3 @@
 data/cleaned_data_*.parquet
 data/sentiment_data_*.parquet
+data/original_data_*.parquet

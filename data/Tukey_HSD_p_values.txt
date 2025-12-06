@@ -1,0 +1,1176 @@
+﻿entertainment:Argentina-business:Argentina                     0.0000000
+general:Argentina-business:Argentina                           0.0000000
+health:Argentina-business:Argentina                            0.1295323
+science:Argentina-business:Argentina                           0.9998422
+sports:Argentina-business:Argentina                            0.3613539
+technology:Argentina-business:Argentina                        1.0000000
+business:Canada-business:Argentina                             0.0000000
+entertainment:Canada-business:Argentina                        0.0001139
+general:Canada-business:Argentina                              0.0000000
+health:Canada-business:Argentina                               0.0000000
+science:Canada-business:Argentina                              1.0000000
+sports:Canada-business:Argentina                               0.0000003
+technology:Canada-business:Argentina                           1.0000000
+business:China-business:Argentina                              0.0000000
+entertainment:China-business:Argentina                         0.0000000
+general:China-business:Argentina                               0.0000000
+health:China-business:Argentina                                0.0000000
+science:China-business:Argentina                               0.0000000
+sports:China-business:Argentina                                0.0000000
+technology:China-business:Argentina                            0.0000006
+business:India-business:Argentina                              0.0000000
+entertainment:India-business:Argentina                         0.0000000
+general:India-business:Argentina                               0.0000000
+health:India-business:Argentina                                0.0000000
+science:India-business:Argentina                               0.0000016
+sports:India-business:Argentina                                0.0000000
+technology:India-business:Argentina                            0.0000000
+business:Italy-business:Argentina                              0.0626470
+entertainment:Italy-business:Argentina                         0.9984189
+general:Italy-business:Argentina                               0.0000000
+health:Italy-business:Argentina                                0.0000000
+science:Italy-business:Argentina                               0.0000000
+sports:Italy-business:Argentina                                0.9999781
+technology:Italy-business:Argentina                            0.0000000
+business:Russian Federation-business:Argentina                 0.0000000
+entertainment:Russian Federation-business:Argentina            0.0000000
+general:Russian Federation-business:Argentina                  0.0000000
+health:Russian Federation-business:Argentina                   0.0000000
+science:Russian Federation-business:Argentina                  0.0000000
+sports:Russian Federation-business:Argentina                   0.0000000
+technology:Russian Federation-business:Argentina               0.0000930
+business:United States-business:Argentina                      0.0000000
+entertainment:United States-business:Argentina                 0.0198176
+general:United States-business:Argentina                       0.0000000
+health:United States-business:Argentina                        0.0000000
+science:United States-business:Argentina                       1.0000000
+sports:United States-business:Argentina                        0.5747399
+technology:United States-business:Argentina                    0.9936518
+general:Argentina-entertainment:Argentina                      0.0004761
+health:Argentina-entertainment:Argentina                       0.0000000
+science:Argentina-entertainment:Argentina                      0.0000000
+sports:Argentina-entertainment:Argentina                       0.0000000
+technology:Argentina-entertainment:Argentina                   0.0000000
+business:Canada-entertainment:Argentina                        0.8769618
+entertainment:Canada-entertainment:Argentina                   0.0000000
+general:Canada-entertainment:Argentina                         0.8870933
+health:Canada-entertainment:Argentina                          1.0000000
+science:Canada-entertainment:Argentina                         0.0000000
+sports:Canada-entertainment:Argentina                          0.0000000
+technology:Canada-entertainment:Argentina                      0.0000000
+business:China-entertainment:Argentina                         0.0000000
+entertainment:China-entertainment:Argentina                    0.0000000
+general:China-entertainment:Argentina                          0.0000000
+health:China-entertainment:Argentina                           0.0000012
+science:China-entertainment:Argentina                          0.0000000
+sports:China-entertainment:Argentina                           0.0000000
+technology:China-entertainment:Argentina                       0.0000000
+business:India-entertainment:Argentina                         0.0000000
+entertainment:India-entertainment:Argentina                    0.0000000
+general:India-entertainment:Argentina                          0.9996004
+health:India-entertainment:Argentina                           0.1085667
+science:India-entertainment:Argentina                          0.0000000
+sports:India-entertainment:Argentina                           0.0000000
+technology:India-entertainment:Argentina                       0.0000000
+business:Italy-entertainment:Argentina                         0.0000000
+entertainment:Italy-entertainment:Argentina                    0.0000000
+general:Italy-entertainment:Argentina                          0.0000000
+health:Italy-entertainment:Argentina                           1.0000000
+science:Italy-entertainment:Argentina                          0.0000393
+sports:Italy-entertainment:Argentina                           0.0000000
+technology:Italy-entertainment:Argentina                       0.0000000
+business:Russian Federation-entertainment:Argentina            0.0000013
+entertainment:Russian Federation-entertainment:Argentina       1.0000000
+general:Russian Federation-entertainment:Argentina             0.0000000
+health:Russian Federation-entertainment:Argentina              0.4331037
+science:Russian Federation-entertainment:Argentina             0.9980461
+sports:Russian Federation-entertainment:Argentina              0.0000000
+technology:Russian Federation-entertainment:Argentina          0.0000000
+business:United States-entertainment:Argentina                 0.0130333
+entertainment:United States-entertainment:Argentina            0.0000000
+general:United States-entertainment:Argentina                  0.0000000
+health:United States-entertainment:Argentina                   0.0000000
+science:United States-entertainment:Argentina                  0.0000000
+sports:United States-entertainment:Argentina                   0.0000000
+technology:United States-entertainment:Argentina               0.0000000
+health:Argentina-general:Argentina                             0.0000000
+science:Argentina-general:Argentina                            0.0000000
+sports:Argentina-general:Argentina                             0.0000000
+technology:Argentina-general:Argentina                         0.0000000
+business:Canada-general:Argentina                              0.0000000
+entertainment:Canada-general:Argentina                         0.0000000
+general:Canada-general:Argentina                               0.9957292
+health:Canada-general:Argentina                                0.0000302
+science:Canada-general:Argentina                               0.0000000
+sports:Canada-general:Argentina                                0.0000000
+technology:Canada-general:Argentina                            0.0000000
+business:China-general:Argentina                               0.0000000
+entertainment:China-general:Argentina                          0.0000000
+general:China-general:Argentina                                0.0000000
+health:China-general:Argentina                                 0.0826282
+science:China-general:Argentina                                0.0000000
+sports:China-general:Argentina                                 0.0000000
+technology:China-general:Argentina                             0.0000000
+business:India-general:Argentina                               0.0000000
+entertainment:India-general:Argentina                          0.0000000
+general:India-general:Argentina                                0.0000037
+health:India-general:Argentina                                 0.9999316
+science:India-general:Argentina                                0.0000000
+sports:India-general:Argentina                                 0.0000000
+technology:India-general:Argentina                             0.0000000
+business:Italy-general:Argentina                               0.0000000
+entertainment:Italy-general:Argentina                          0.0000000
+general:Italy-general:Argentina                                0.0916056
+health:Italy-general:Argentina                                 0.0008664
+science:Italy-general:Argentina                                0.0000000
+sports:Italy-general:Argentina                                 0.0000000
+technology:Italy-general:Argentina                             0.0000000
+business:Russian Federation-general:Argentina                  0.0000000
+entertainment:Russian Federation-general:Argentina             0.0219565
+general:Russian Federation-general:Argentina                   0.3244536
+health:Russian Federation-general:Argentina                    1.0000000
+science:Russian Federation-general:Argentina                   0.0000003
+sports:Russian Federation-general:Argentina                    0.0000000
+technology:Russian Federation-general:Argentina                0.0000000
+business:United States-general:Argentina                       0.0000000
+entertainment:United States-general:Argentina                  0.0000000
+general:United States-general:Argentina                        0.0000000
+health:United States-general:Argentina                         0.0228105
+science:United States-general:Argentina                        0.0000000
+sports:United States-general:Argentina                         0.0000000
+technology:United States-general:Argentina                     0.0000000
+science:Argentina-health:Argentina                             0.0000659
+sports:Argentina-health:Argentina                              0.0000000
+technology:Argentina-health:Argentina                          0.0453146
+business:Canada-health:Argentina                               0.0000000
+entertainment:Canada-health:Argentina                          0.0000000
+general:Canada-health:Argentina                                0.0000000
+health:Canada-health:Argentina                                 0.0000000
+science:Canada-health:Argentina                                0.9997317
+sports:Canada-health:Argentina                                 0.9957841
+technology:Canada-health:Argentina                             0.7504395
+business:China-health:Argentina                                0.0000000
+entertainment:China-health:Argentina                           0.0000000
+general:China-health:Argentina                                 0.0000000
+health:China-health:Argentina                                  0.0000000
+science:China-health:Argentina                                 0.0000000
+sports:China-health:Argentina                                  0.0000000
+technology:China-health:Argentina                              0.9894971
+business:India-health:Argentina                                0.0000000
+entertainment:India-health:Argentina                           0.0000000
+general:India-health:Argentina                                 0.0000000
+health:India-health:Argentina                                  0.0000000
+science:India-health:Argentina                                 0.6246434
+sports:India-health:Argentina                                  0.0000000
+technology:India-health:Argentina                              0.0086455
+business:Italy-health:Argentina                                1.0000000
+entertainment:Italy-health:Argentina                           0.0000014
+general:Italy-health:Argentina                                 0.0000000
+health:Italy-health:Argentina                                  0.0000000
+science:Italy-health:Argentina                                 0.0000000
+sports:Italy-health:Argentina                                  0.9887187
+technology:Italy-health:Argentina                              0.0000000
+business:Russian Federation-health:Argentina                   0.0000000
+entertainment:Russian Federation-health:Argentina              0.0000000
+general:Russian Federation-health:Argentina                    0.0000000
+health:Russian Federation-health:Argentina                     0.0000000
+science:Russian Federation-health:Argentina                    0.0000000
+sports:Russian Federation-health:Argentina                     0.0000000
+technology:Russian Federation-health:Argentina                 1.0000000
+business:United States-health:Argentina                        0.0000000
+entertainment:United States-health:Argentina                   0.0000000
+general:United States-health:Argentina                         0.0000000
+health:United States-health:Argentina                          0.0000000
+science:United States-health:Argentina                         0.9633931
+sports:United States-health:Argentina                          1.0000000
+technology:United States-health:Argentina                      1.0000000
+sports:Argentina-science:Argentina                             1.0000000
+technology:Argentina-science:Argentina                         0.9999924
+business:Canada-science:Argentina                              0.0000000
+entertainment:Canada-science:Argentina                         0.4836349
+general:Canada-science:Argentina                               0.0000000
+health:Canada-science:Argentina                                0.0000000
+science:Canada-science:Argentina                               0.8930452
+sports:Canada-science:Argentina                                0.0000000
+technology:Canada-science:Argentina                            0.6612818
+business:China-science:Argentina                               0.0000000
+entertainment:China-science:Argentina                          0.0000000
+general:China-science:Argentina                                0.0000000
+health:China-science:Argentina                                 0.0000000
+science:China-science:Argentina                                0.0000000
+sports:China-science:Argentina                                 0.0000000
+technology:China-science:Argentina                             0.0000000
+business:India-science:Argentina                               0.0000000
+entertainment:India-science:Argentina                          0.0000000
+general:India-science:Argentina                                0.0000000
+health:India-science:Argentina                                 0.0000000
+science:India-science:Argentina                                0.0000000
+sports:India-science:Argentina                                 0.0000000
+technology:India-science:Argentina                             0.0000000
+business:Italy-science:Argentina                               0.0000058
+entertainment:Italy-science:Argentina                          1.0000000
+general:Italy-science:Argentina                                0.0000000
+health:Italy-science:Argentina                                 0.0000000
+science:Italy-science:Argentina                                0.0001941
+sports:Italy-science:Argentina                                 0.1535060
+technology:Italy-science:Argentina                             0.0000000
+business:Russian Federation-science:Argentina                  0.0003762
+entertainment:Russian Federation-science:Argentina             0.0000000
+general:Russian Federation-science:Argentina                   0.0000000
+health:Russian Federation-science:Argentina                    0.0000000
+science:Russian Federation-science:Argentina                   0.0000000
+sports:Russian Federation-science:Argentina                    0.0000000
+technology:Russian Federation-science:Argentina                0.0000000
+business:United States-science:Argentina                       0.0000000
+entertainment:United States-science:Argentina                  0.9946940
+general:United States-science:Argentina                        0.0000000
+health:United States-science:Argentina                         0.0000000
+science:United States-science:Argentina                        1.0000000
+sports:United States-science:Argentina                         0.0007613
+technology:United States-science:Argentina                     0.2022234
+technology:Argentina-sports:Argentina                          0.5069266
+business:Canada-sports:Argentina                               0.0000000
+entertainment:Canada-sports:Argentina                          0.9912369
+general:Canada-sports:Argentina                                0.0000000
+health:Canada-sports:Argentina                                 0.0000000
+science:Canada-sports:Argentina                                0.1008152
+sports:Canada-sports:Argentina                                 0.0000000
+technology:Canada-sports:Argentina                             0.0034024
+business:China-sports:Argentina                                0.0000000
+entertainment:China-sports:Argentina                           0.0000000
+general:China-sports:Argentina                                 0.0000000
+health:China-sports:Argentina                                  0.0000000
+science:China-sports:Argentina                                 0.0000000
+sports:China-sports:Argentina                                  0.0000000
+technology:China-sports:Argentina                              0.0000000
+business:India-sports:Argentina                                0.0000000
+entertainment:India-sports:Argentina                           0.0000000
+general:India-sports:Argentina                                 0.0000000
+health:India-sports:Argentina                                  0.0000000
+science:India-sports:Argentina                                 0.0000000
+sports:India-sports:Argentina                                  0.0000000
+technology:India-sports:Argentina                              0.0000000
+business:Italy-sports:Argentina                                0.0000000
+entertainment:Italy-sports:Argentina                           0.9999996
+general:Italy-sports:Argentina                                 0.0000000
+health:Italy-sports:Argentina                                  0.0000000
+science:Italy-sports:Argentina                                 0.0042797
+sports:Italy-sports:Argentina                                  0.0000535
+technology:Italy-sports:Argentina                              0.0000000
+business:Russian Federation-sports:Argentina                   0.0081266
+entertainment:Russian Federation-sports:Argentina              0.0000000
+general:Russian Federation-sports:Argentina                    0.0000000
+health:Russian Federation-sports:Argentina                     0.0000000
+science:Russian Federation-sports:Argentina                    0.0000000
+sports:Russian Federation-sports:Argentina                     0.0000000
+technology:Russian Federation-sports:Argentina                 0.0000000
+business:United States-sports:Argentina                        0.0000001
+entertainment:United States-sports:Argentina                   1.0000000
+general:United States-sports:Argentina                         0.0000000
+health:United States-sports:Argentina                          0.0000000
+science:United States-sports:Argentina                         0.9999999
+sports:United States-sports:Argentina                          0.0000000
+technology:United States-sports:Argentina                      0.0035483
+business:Canada-technology:Argentina                           0.0000000
+entertainment:Canada-technology:Argentina                      0.0002137
+general:Canada-technology:Argentina                            0.0000000
+health:Canada-technology:Argentina                             0.0000000
+science:Canada-technology:Argentina                            1.0000000
+sports:Canada-technology:Argentina                             0.0000000
+technology:Canada-technology:Argentina                         1.0000000
+business:China-technology:Argentina                            0.0000000
+entertainment:China-technology:Argentina                       0.0000000
+general:China-technology:Argentina                             0.0000000
+health:China-technology:Argentina                              0.0000000
+science:China-technology:Argentina                             0.0000000
+sports:China-technology:Argentina                              0.0000000
+technology:China-technology:Argentina                          0.0000000
+business:India-technology:Argentina                            0.0000000
+entertainment:India-technology:Argentina                       0.0000000
+general:India-technology:Argentina                             0.0000000
+health:India-technology:Argentina                              0.0000000
+science:India-technology:Argentina                             0.0000003
+sports:India-technology:Argentina                              0.0000000
+technology:India-technology:Argentina                          0.0000000
+business:Italy-technology:Argentina                            0.0150479
+entertainment:Italy-technology:Argentina                       0.9998834
+general:Italy-technology:Argentina                             0.0000000
+health:Italy-technology:Argentina                              0.0000000
+science:Italy-technology:Argentina                             0.0000000
+sports:Italy-technology:Argentina                              0.9987301
+technology:Italy-technology:Argentina                          0.0000000
+business:Russian Federation-technology:Argentina               0.0000000
+entertainment:Russian Federation-technology:Argentina          0.0000000
+general:Russian Federation-technology:Argentina                0.0000000
+health:Russian Federation-technology:Argentina                 0.0000000
+science:Russian Federation-technology:Argentina                0.0000000
+sports:Russian Federation-technology:Argentina                 0.0000000
+technology:Russian Federation-technology:Argentina             0.0000100
+business:United States-technology:Argentina                    0.0000000
+entertainment:United States-technology:Argentina               0.0349169
+general:United States-technology:Argentina                     0.0000000
+health:United States-technology:Argentina                      0.0000000
+science:United States-technology:Argentina                     1.0000000
+sports:United States-technology:Argentina                      0.2934527
+technology:United States-technology:Argentina                  0.9701596
+entertainment:Canada-business:Canada                           0.0000001
+general:Canada-business:Canada                                 0.0025086
+health:Canada-business:Canada                                  0.9999953
+science:Canada-business:Canada                                 0.0000000
+sports:Canada-business:Canada                                  0.0000000
+technology:Canada-business:Canada                              0.0000000
+business:China-business:Canada                                 0.0000000
+entertainment:China-business:Canada                            0.0000000
+general:China-business:Canada                                  0.0000000
+health:China-business:Canada                                   0.0000000
+science:China-business:Canada                                  0.0000000
+sports:China-business:Canada                                   0.0000000
+technology:China-business:Canada                               0.0000000
+business:India-business:Canada                                 0.0000000
+entertainment:India-business:Canada                            0.0000000
+general:India-business:Canada                                  1.0000000
+health:India-business:Canada                                   0.0000011
+science:India-business:Canada                                  0.0000000
+sports:India-business:Canada                                   0.0000000
+technology:India-business:Canada                               0.0000000
+business:Italy-business:Canada                                 0.0000000
+entertainment:Italy-business:Canada                            0.0000000
+general:Italy-business:Canada                                  0.0000000
+health:Italy-business:Canada                                   0.9999920
+science:Italy-business:Canada                                  0.5125266
+sports:Italy-business:Canada                                   0.0000000
+technology:Italy-business:Canada                               0.0000000
+business:Russian Federation-business:Canada                    0.1769702
+entertainment:Russian Federation-business:Canada               0.1174435
+general:Russian Federation-business:Canada                     0.0000000
+health:Russian Federation-business:Canada                      0.0440307
+science:Russian Federation-business:Canada                     1.0000000
+sports:Russian Federation-business:Canada                      0.0000000
+technology:Russian Federation-business:Canada                  0.0000000
+business:United States-business:Canada                         0.9999362
+entertainment:United States-business:Canada                    0.0000000
+general:United States-business:Canada                          0.0000000
+health:United States-business:Canada                           0.0000000
+science:United States-business:Canada                          0.0000355
+sports:United States-business:Canada                           0.0000000
+technology:United States-business:Canada                       0.0000000
+general:Canada-entertainment:Canada                            0.0000000
+health:Canada-entertainment:Canada                             0.0000000
+science:Canada-entertainment:Canada                            0.0000991
+sports:Canada-entertainment:Canada                             0.0000000
+technology:Canada-entertainment:Canada                         0.0000000
+business:China-entertainment:Canada                            0.0000000
+entertainment:China-entertainment:Canada                       0.0000000
+general:China-entertainment:Canada                             0.0000000
+health:China-entertainment:Canada                              0.0000000
+science:China-entertainment:Canada                             0.0000000
+sports:China-entertainment:Canada                              0.0000000
+technology:China-entertainment:Canada                          0.0000000
+business:India-entertainment:Canada                            0.0000000
+entertainment:India-entertainment:Canada                       0.0000000
+general:India-entertainment:Canada                             0.0000618
+health:India-entertainment:Canada                              0.0000000
+science:India-entertainment:Canada                             0.0000000
+sports:India-entertainment:Canada                              0.0000000
+technology:India-entertainment:Canada                          0.0000000
+business:Italy-entertainment:Canada                            0.0000000
+entertainment:Italy-entertainment:Canada                       0.0925839
+general:Italy-entertainment:Canada                             0.0000000
+health:Italy-entertainment:Canada                              0.0000000
+science:Italy-entertainment:Canada                             0.8845111
+sports:Italy-entertainment:Canada                              0.0000000
+technology:Italy-entertainment:Canada                          0.0000000
+business:Russian Federation-entertainment:Canada               0.9655237
+entertainment:Russian Federation-entertainment:Canada          0.0000000
+general:Russian Federation-entertainment:Canada                0.0000000
+health:Russian Federation-entertainment:Canada                 0.0000017
+science:Russian Federation-entertainment:Canada                0.0000005
+sports:Russian Federation-entertainment:Canada                 0.0000000
+technology:Russian Federation-entertainment:Canada             0.0000000
+business:United States-entertainment:Canada                    0.0108108
+entertainment:United States-entertainment:Canada               1.0000000
+general:United States-entertainment:Canada                     0.0000000
+health:United States-entertainment:Canada                      0.0000000
+science:United States-entertainment:Canada                     0.9466437
+sports:United States-entertainment:Canada                      0.0000000
+technology:United States-entertainment:Canada                  0.0000016
+health:Canada-general:Canada                                   0.4050734
+science:Canada-general:Canada                                  0.0000000
+sports:Canada-general:Canada                                   0.0000000
+technology:Canada-general:Canada                               0.0000000
+business:China-general:Canada                                  0.0000000
+entertainment:China-general:Canada                             0.0000000
+general:China-general:Canada                                   0.0000000
+health:China-general:Canada                                    0.0011290
+science:China-general:Canada                                   0.0000000
+sports:China-general:Canada                                    0.0000000
+technology:China-general:Canada                                0.0000000
+business:India-general:Canada                                  0.0000000
+entertainment:India-general:Canada                             0.0000000
+general:India-general:Canada                                   0.0737906
+health:India-general:Canada                                    1.0000000
+science:India-general:Canada                                   0.0000000
+sports:India-general:Canada                                    0.0000000
+technology:India-general:Canada                                0.0000000
+business:Italy-general:Canada                                  0.0000000
+entertainment:Italy-general:Canada                             0.0000000
+general:Italy-general:Canada                                   0.0000019
+health:Italy-general:Canada                                    0.7945710
+science:Italy-general:Canada                                   0.0000000
+sports:Italy-general:Canada                                    0.0000000
+technology:Italy-general:Canada                                0.0000000
+business:Russian Federation-general:Canada                     0.0000000
+entertainment:Russian Federation-general:Canada                0.9999560
+general:Russian Federation-general:Canada                      0.0000347
+health:Russian Federation-general:Canada                       0.9950274
+science:Russian Federation-general:Canada                      0.0291717
+sports:Russian Federation-general:Canada                       0.0000000
+technology:Russian Federation-general:Canada                   0.0000000
+business:United States-general:Canada                          0.0000020
+entertainment:United States-general:Canada                     0.0000000
+general:United States-general:Canada                           0.0000000
+health:United States-general:Canada                            0.0000000
+science:United States-general:Canada                           0.0000000
+sports:United States-general:Canada                            0.0000000
+technology:United States-general:Canada                        0.0000000
+science:Canada-health:Canada                                   0.0000000
+sports:Canada-health:Canada                                    0.0000000
+technology:Canada-health:Canada                                0.0000000
+business:China-health:Canada                                   0.0000000
+entertainment:China-health:Canada                              0.0000000
+general:China-health:Canada                                    0.0000000
+health:China-health:Canada                                     0.0000002
+science:China-health:Canada                                    0.0000000
+sports:China-health:Canada                                     0.0000000
+technology:China-health:Canada                                 0.0000000
+business:India-health:Canada                                   0.0000000
+entertainment:India-health:Canada                              0.0000000
+general:India-health:Canada                                    1.0000000
+health:India-health:Canada                                     0.0106712
+science:India-health:Canada                                    0.0000000
+sports:India-health:Canada                                     0.0000000
+technology:India-health:Canada                                 0.0000000
+business:Italy-health:Canada                                   0.0000000
+entertainment:Italy-health:Canada                              0.0000000
+general:Italy-health:Canada                                    0.0000000
+health:Italy-health:Canada                                     1.0000000
+science:Italy-health:Canada                                    0.0068793
+sports:Italy-health:Canada                                     0.0000000
+technology:Italy-health:Canada                                 0.0000000
+business:Russian Federation-health:Canada                      0.0006623
+entertainment:Russian Federation-health:Canada                 0.9995944
+general:Russian Federation-health:Canada                       0.0000000
+health:Russian Federation-health:Canada                        0.2389331
+science:Russian Federation-health:Canada                       1.0000000
+sports:Russian Federation-health:Canada                        0.0000000
+technology:Russian Federation-health:Canada                    0.0000000
+business:United States-health:Canada                           0.3819545
+entertainment:United States-health:Canada                      0.0000000
+general:United States-health:Canada                            0.0000000
+health:United States-health:Canada                             0.0000000
+science:United States-health:Canada                            0.0000004
+sports:United States-health:Canada                             0.0000000
+technology:United States-health:Canada                         0.0000000
+sports:Canada-science:Canada                                   0.1100264
+technology:Canada-science:Canada                               1.0000000
+business:China-science:Canada                                  0.0000000
+entertainment:China-science:Canada                             0.0000000
+general:China-science:Canada                                   0.0000000
+health:China-science:Canada                                    0.0000000
+science:China-science:Canada                                   0.0000000
+sports:China-science:Canada                                    0.0000000
+technology:China-science:Canada                                0.0947853
+business:India-science:Canada                                  0.0000000
+entertainment:India-science:Canada                             0.0000000
+general:India-science:Canada                                   0.0000000
+health:India-science:Canada                                    0.0000000
+science:India-science:Canada                                   0.0172495
+sports:India-science:Canada                                    0.0000000
+technology:India-science:Canada                                0.0000271
+business:Italy-science:Canada                                  0.9998643
+entertainment:Italy-science:Canada                             0.7885746
+general:Italy-science:Canada                                   0.0000000
+health:Italy-science:Canada                                    0.0000000
+science:Italy-science:Canada                                   0.0000000
+sports:Italy-science:Canada                                    1.0000000
+technology:Italy-science:Canada                                0.0000000
+business:Russian Federation-science:Canada                     0.0000000
+entertainment:Russian Federation-science:Canada                0.0000000
+general:Russian Federation-science:Canada                      0.0000000
+health:Russian Federation-science:Canada                       0.0000000
+science:Russian Federation-science:Canada                      0.0000000
+sports:Russian Federation-science:Canada                       0.0000000
+technology:Russian Federation-science:Canada                   0.5705660
+business:United States-science:Canada                          0.0000000
+entertainment:United States-science:Canada                     0.0059921
+general:United States-science:Canada                           0.0000000
+health:United States-science:Canada                            0.0000000
+science:United States-science:Canada                           1.0000000
+sports:United States-science:Canada                            1.0000000
+technology:United States-science:Canada                        1.0000000
+technology:Canada-sports:Canada                                0.0000318
+business:China-sports:Canada                                   0.0000000
+entertainment:China-sports:Canada                              0.0000000
+general:China-sports:Canada                                    0.0000000
+health:China-sports:Canada                                     0.0000000
+science:China-sports:Canada                                    0.0000000
+sports:China-sports:Canada                                     0.0000000
+technology:China-sports:Canada                                 1.0000000
+business:India-sports:Canada                                   0.0000073
+entertainment:India-sports:Canada                              0.0000000
+general:India-sports:Canada                                    0.0000000
+health:India-sports:Canada                                     0.0000000
+science:India-sports:Canada                                    0.9999994
+sports:India-sports:Canada                                     0.0000000
+technology:India-sports:Canada                                 0.8259033
+business:Italy-sports:Canada                                   0.7958764
+entertainment:Italy-sports:Canada                              0.0000000
+general:Italy-sports:Canada                                    0.0000000
+health:Italy-sports:Canada                                     0.0000000
+science:Italy-sports:Canada                                    0.0000000
+sports:Italy-sports:Canada                                     0.0008089
+technology:Italy-sports:Canada                                 0.0000000
+business:Russian Federation-sports:Canada                      0.0000000
+entertainment:Russian Federation-sports:Canada                 0.0000000
+general:Russian Federation-sports:Canada                       0.0000000
+health:Russian Federation-sports:Canada                        0.0000000
+science:Russian Federation-sports:Canada                       0.0000000
+sports:Russian Federation-sports:Canada                        0.0000000
+technology:Russian Federation-sports:Canada                    1.0000000
+business:United States-sports:Canada                           0.0000000
+entertainment:United States-sports:Canada                      0.0000000
+general:United States-sports:Canada                            0.0000000
+health:United States-sports:Canada                             0.0000000
+science:United States-sports:Canada                            0.1416883
+sports:United States-sports:Canada                             0.2002289
+technology:United States-sports:Canada                         0.9921173
+business:China-technology:Canada                               0.0000000
+entertainment:China-technology:Canada                          0.0000000
+general:China-technology:Canada                                0.0000000
+health:China-technology:Canada                                 0.0000000
+science:China-technology:Canada                                0.0000000
+sports:China-technology:Canada                                 0.0000000
+technology:China-technology:Canada                             0.0000585
+business:India-technology:Canada                               0.0000000
+entertainment:India-technology:Canada                          0.0000000
+general:India-technology:Canada                                0.0000000
+health:India-technology:Canada                                 0.0000000
+science:India-technology:Canada                                0.0000685
+sports:India-technology:Canada                                 0.0000000
+technology:India-technology:Canada                             0.0000000
+business:Italy-technology:Canada                               0.6356086
+entertainment:Italy-technology:Canada                          0.3282873
+general:Italy-technology:Canada                                0.0000000
+health:Italy-technology:Canada                                 0.0000000
+science:Italy-technology:Canada                                0.0000000
+sports:Italy-technology:Canada                                 1.0000000
+technology:Italy-technology:Canada                             0.0000000
+business:Russian Federation-technology:Canada                  0.0000000
+entertainment:Russian Federation-technology:Canada             0.0000000
+general:Russian Federation-technology:Canada                   0.0000000
+health:Russian Federation-technology:Canada                    0.0000000
+science:Russian Federation-technology:Canada                   0.0000000
+sports:Russian Federation-technology:Canada                    0.0000000
+technology:Russian Federation-technology:Canada                0.0055110
+business:United States-technology:Canada                       0.0000000
+entertainment:United States-technology:Canada                  0.0000285
+general:United States-technology:Canada                        0.0000000
+health:United States-technology:Canada                         0.0000000
+science:United States-technology:Canada                        1.0000000
+sports:United States-technology:Canada                         0.9974165
+technology:United States-technology:Canada                     0.9999997
+entertainment:China-business:China                             0.0000000
+general:China-business:China                                   0.0000433
+health:China-business:China                                    0.0000000
+science:China-business:China                                   0.0000000
+sports:China-business:China                                    0.0000000
+technology:China-business:China                                0.0000000
+business:India-business:China                                  0.0001157
+entertainment:India-business:China                             0.9999432
+general:India-business:China                                   0.0000000
+health:India-business:China                                    0.0000000
+science:India-business:China                                   0.0000024
+sports:India-business:China                                    0.9208448
+technology:India-business:China                                0.0000000
+business:Italy-business:China                                  0.0000000
+entertainment:Italy-business:China                             0.0000000
+general:Italy-business:China                                   0.0000000
+health:Italy-business:China                                    0.0000000
+science:Italy-business:China                                   0.0000000
+sports:Italy-business:China                                    0.0000000
+technology:Italy-business:China                                0.0618833
+business:Russian Federation-business:China                     0.0000000
+entertainment:Russian Federation-business:China                0.0000000
+general:Russian Federation-business:China                      0.0000000
+health:Russian Federation-business:China                       0.0000000
+science:Russian Federation-business:China                      0.0000000
+sports:Russian Federation-business:China                       0.9999990
+technology:Russian Federation-business:China                   0.0000000
+business:United States-business:China                          0.0000000
+entertainment:United States-business:China                     0.0000000
+general:United States-business:China                           0.0000000
+health:United States-business:China                            0.0000000
+science:United States-business:China                           0.0000000
+sports:United States-business:China                            0.0000000
+technology:United States-business:China                        0.0000000
+general:China-entertainment:China                              0.0000000
+health:China-entertainment:China                               0.0000000
+science:China-entertainment:China                              0.0000000
+sports:China-entertainment:China                               0.0000000
+technology:China-entertainment:China                           0.0000000
+business:India-entertainment:China                             0.0000000
+entertainment:India-entertainment:China                        0.0000000
+general:India-entertainment:China                              0.0000000
+health:India-entertainment:China                               0.0000000
+science:India-entertainment:China                              0.0000000
+sports:India-entertainment:China                               0.0000000
+technology:India-entertainment:China                           0.0000000
+business:Italy-entertainment:China                             0.0000000
+entertainment:Italy-entertainment:China                        0.0000000
+general:Italy-entertainment:China                              0.0000000
+health:Italy-entertainment:China                               0.0000000
+science:Italy-entertainment:China                              0.0000000
+sports:Italy-entertainment:China                               0.0000000
+technology:Italy-entertainment:China                           0.0000000
+business:Russian Federation-entertainment:China                0.0000000
+entertainment:Russian Federation-entertainment:China           0.0000000
+general:Russian Federation-entertainment:China                 0.0000000
+health:Russian Federation-entertainment:China                  0.0000000
+science:Russian Federation-entertainment:China                 0.0000000
+sports:Russian Federation-entertainment:China                  0.0000000
+technology:Russian Federation-entertainment:China              0.0000000
+business:United States-entertainment:China                     0.0000000
+entertainment:United States-entertainment:China                0.0000000
+general:United States-entertainment:China                      0.0000000
+health:United States-entertainment:China                       0.0000000
+science:United States-entertainment:China                      0.0000000
+sports:United States-entertainment:China                       0.0000000
+technology:United States-entertainment:China                   0.0000000
+health:China-general:China                                     0.0000000
+science:China-general:China                                    1.0000000
+sports:China-general:China                                     0.0000000
+technology:China-general:China                                 0.0000000
+business:India-general:China                                   0.0000000
+entertainment:India-general:China                              0.0161282
+general:India-general:China                                    0.0000000
+health:India-general:China                                     0.0000000
+science:India-general:China                                    0.0000000
+sports:India-general:China                                     0.0000000
+technology:India-general:China                                 0.0000000
+business:Italy-general:China                                   0.0000000
+entertainment:Italy-general:China                              0.0000000
+general:Italy-general:China                                    0.0000000
+health:Italy-general:China                                     0.0000000
+science:Italy-general:China                                    0.0000000
+sports:Italy-general:China                                     0.0000000
+technology:Italy-general:China                                 0.0000000
+business:Russian Federation-general:China                      0.0000000
+entertainment:Russian Federation-general:China                 0.0000000
+general:Russian Federation-general:China                       0.0000000
+health:Russian Federation-general:China                        0.0000000
+science:Russian Federation-general:China                       0.0000000
+sports:Russian Federation-general:China                        0.0000001
+technology:Russian Federation-general:China                    0.0000000
+business:United States-general:China                           0.0000000
+entertainment:United States-general:China                      0.0000000
+general:United States-general:China                            0.0000000
+health:United States-general:China                             0.0000000
+science:United States-general:China                            0.0000000
+sports:United States-general:China                             0.0000000
+technology:United States-general:China                         0.0000000
+science:China-health:China                                     0.0000000
+sports:China-health:China                                      0.0000000
+technology:China-health:China                                  0.0000000
+business:India-health:China                                    0.0000000
+entertainment:India-health:China                               0.0000000
+general:India-health:China                                     0.0000000
+health:India-health:China                                      0.0023041
+science:India-health:China                                     0.0000000
+sports:India-health:China                                      0.0000000
+technology:India-health:China                                  0.0000000
+business:Italy-health:China                                    0.0000000
+entertainment:Italy-health:China                               0.0000000
+general:Italy-health:China                                     0.9990042
+health:Italy-health:China                                      0.0000008
+science:Italy-health:China                                     0.0000000
+sports:Italy-health:China                                      0.0000000
+technology:Italy-health:China                                  0.0000000
+business:Russian Federation-health:China                       0.0000000
+entertainment:Russian Federation-health:China                  0.0000102
+general:Russian Federation-health:China                        0.9929179
+health:Russian Federation-health:China                         0.9998744
+science:Russian Federation-health:China                        0.0000000
+sports:Russian Federation-health:China                         0.0000000
+technology:Russian Federation-health:China                     0.0000000
+business:United States-health:China                            0.0000000
+entertainment:United States-health:China                       0.0000000
+general:United States-health:China                             0.9999373
+health:United States-health:China                              0.9979771
+science:United States-health:China                             0.0000000
+sports:United States-health:China                              0.0000000
+technology:United States-health:China                          0.0000000
+sports:China-science:China                                     0.0000000
+technology:China-science:China                                 0.0000000
+business:India-science:China                                   0.0000000
+entertainment:India-science:China                              0.0000801
+general:India-science:China                                    0.0000000
+health:India-science:China                                     0.0000000
+science:India-science:China                                    0.0000000
+sports:India-science:China                                     0.0000000
+technology:India-science:China                                 0.0000000
+business:Italy-science:China                                   0.0000000
+entertainment:Italy-science:China                              0.0000000
+general:Italy-science:China                                    0.0000000
+health:Italy-science:China                                     0.0000000
+science:Italy-science:China                                    0.0000000
+sports:Italy-science:China                                     0.0000000
+technology:Italy-science:China                                 0.0000000
+business:Russian Federation-science:China                      0.0000000
+entertainment:Russian Federation-science:China                 0.0000000
+general:Russian Federation-science:China                       0.0000000
+health:Russian Federation-science:China                        0.0000000
+science:Russian Federation-science:China                       0.0000000
+sports:Russian Federation-science:China                        0.0000000
+technology:Russian Federation-science:China                    0.0000000
+business:United States-science:China                           0.0000000
+entertainment:United States-science:China                      0.0000000
+general:United States-science:China                            0.0000000
+health:United States-science:China                             0.0000000
+science:United States-science:China                            0.0000000
+sports:United States-science:China                             0.0000000
+technology:United States-science:China                         0.0000000
+technology:China-sports:China                                  0.0000000
+business:India-sports:China                                    0.0000000
+entertainment:India-sports:China                               0.0000000
+general:India-sports:China                                     0.0000000
+health:India-sports:China                                      0.0000000
+science:India-sports:China                                     0.0000000
+sports:India-sports:China                                      0.0000000
+technology:India-sports:China                                  0.0000000
+business:Italy-sports:China                                    0.0000000
+entertainment:Italy-sports:China                               0.0000000
+general:Italy-sports:China                                     0.0000000
+health:Italy-sports:China                                      0.0000000
+science:Italy-sports:China                                     0.0000000
+sports:Italy-sports:China                                      0.0000000
+technology:Italy-sports:China                                  0.0000000
+business:Russian Federation-sports:China                       0.0000000
+entertainment:Russian Federation-sports:China                  0.0000000
+general:Russian Federation-sports:China                        0.0000000
+health:Russian Federation-sports:China                         0.0000000
+science:Russian Federation-sports:China                        0.0000000
+sports:Russian Federation-sports:China                         0.0000000
+technology:Russian Federation-sports:China                     0.0000000
+business:United States-sports:China                            0.0000000
+entertainment:United States-sports:China                       0.0000000
+general:United States-sports:China                             0.0000000
+health:United States-sports:China                              0.0000000
+science:United States-sports:China                             0.0000000
+sports:United States-sports:China                              0.0000000
+technology:United States-sports:China                          0.0000000
+business:India-technology:China                                0.0002942
+entertainment:India-technology:China                           0.0000000
+general:India-technology:China                                 0.0000000
+health:India-technology:China                                  0.0000000
+science:India-technology:China                                 1.0000000
+sports:India-technology:China                                  0.0000000
+technology:India-technology:China                              0.9770626
+business:Italy-technology:China                                0.7552144
+entertainment:Italy-technology:China                           0.0000000
+general:Italy-technology:China                                 0.0000000
+health:Italy-technology:China                                  0.0000000
+science:Italy-technology:China                                 0.0000000
+sports:Italy-technology:China                                  0.0011886
+technology:Italy-technology:China                              0.0000034
+business:Russian Federation-technology:China                   0.0000000
+entertainment:Russian Federation-technology:China              0.0000000
+general:Russian Federation-technology:China                    0.0000000
+health:Russian Federation-technology:China                     0.0000000
+science:Russian Federation-technology:China                    0.0000000
+sports:Russian Federation-technology:China                     0.0000000
+technology:Russian Federation-technology:China                 1.0000000
+business:United States-technology:China                        0.0000000
+entertainment:United States-technology:China                   0.0000000
+general:United States-technology:China                         0.0000000
+health:United States-technology:China                          0.0000000
+science:United States-technology:China                         0.1171895
+sports:United States-technology:China                          0.1953115
+technology:United States-technology:China                      0.9828065
+entertainment:India-business:India                             0.0000000
+general:India-business:India                                   0.0000000
+health:India-business:India                                    0.0000000
+science:India-business:India                                   0.9621701
+sports:India-business:India                                    0.9188514
+technology:India-business:India                                0.9332008
+business:Italy-business:India                                  0.0000000
+entertainment:Italy-business:India                             0.0000000
+general:Italy-business:India                                   0.0000000
+health:Italy-business:India                                    0.0000000
+science:Italy-business:India                                   0.0000000
+sports:Italy-business:India                                    0.0000000
+technology:Italy-business:India                                1.0000000
+business:Russian Federation-business:India                     0.0000000
+entertainment:Russian Federation-business:India                0.0000000
+general:Russian Federation-business:India                      0.0000000
+health:Russian Federation-business:India                       0.0000000
+science:Russian Federation-business:India                      0.0000000
+sports:Russian Federation-business:India                       0.1243947
+technology:Russian Federation-business:India                   0.0000001
+business:United States-business:India                          0.0000000
+entertainment:United States-business:India                     0.0000000
+general:United States-business:India                           0.0000000
+health:United States-business:India                            0.0000000
+science:United States-business:India                           0.0000002
+sports:United States-business:India                            0.0000000
+technology:United States-business:India                        0.0000050
+general:India-entertainment:India                              0.0000000
+health:India-entertainment:India                               0.0000000
+science:India-entertainment:India                              0.0000000
+sports:India-entertainment:India                               0.0154287
+technology:India-entertainment:India                           0.0000000
+business:Italy-entertainment:India                             0.0000000
+entertainment:Italy-entertainment:India                        0.0000000
+general:Italy-entertainment:India                              0.0000000
+health:Italy-entertainment:India                               0.0000000
+science:Italy-entertainment:India                              0.0000000
+sports:Italy-entertainment:India                               0.0000000
+technology:Italy-entertainment:India                           0.0000192
+business:Russian Federation-entertainment:India                0.0000000
+entertainment:Russian Federation-entertainment:India           0.0000000
+general:Russian Federation-entertainment:India                 0.0000000
+health:Russian Federation-entertainment:India                  0.0000000
+science:Russian Federation-entertainment:India                 0.0000000
+sports:Russian Federation-entertainment:India                  0.3480644
+technology:Russian Federation-entertainment:India              0.0000000
+business:United States-entertainment:India                     0.0000000
+entertainment:United States-entertainment:India                0.0000000
+general:United States-entertainment:India                      0.0000000
+health:United States-entertainment:India                       0.0000000
+science:United States-entertainment:India                      0.0000000
+sports:United States-entertainment:India                       0.0000000
+technology:United States-entertainment:India                   0.0000000
+health:India-general:India                                     0.0012705
+science:India-general:India                                    0.0000000
+sports:India-general:India                                     0.0000000
+technology:India-general:India                                 0.0000000
+business:Italy-general:India                                   0.0000000
+entertainment:Italy-general:India                              0.0000000
+general:Italy-general:India                                    0.0000000
+health:Italy-general:India                                     1.0000000
+science:Italy-general:India                                    0.7834293
+sports:Italy-general:India                                     0.0000000
+technology:Italy-general:India                                 0.0000000
+business:Russian Federation-general:India                      0.4802702
+entertainment:Russian Federation-general:India                 0.7957872
+general:Russian Federation-general:India                       0.0000000
+health:Russian Federation-general:India                        0.0812716
+science:Russian Federation-general:India                       1.0000000
+sports:Russian Federation-general:India                        0.0000000
+technology:Russian Federation-general:India                    0.0000000
+business:United States-general:India                           0.9999919
+entertainment:United States-general:India                      0.0000011
+general:United States-general:India                            0.0000000
+health:United States-general:India                             0.0000000
+science:United States-general:India                            0.0001031
+sports:United States-general:India                             0.0000000
+technology:United States-general:India                         0.0000000
+science:India-health:India                                     0.0000000
+sports:India-health:India                                      0.0000000
+technology:India-health:India                                  0.0000000
+business:Italy-health:India                                    0.0000000
+entertainment:Italy-health:India                               0.0000000
+general:Italy-health:India                                     0.0000015
+health:Italy-health:India                                      0.1254671
+science:Italy-health:India                                     0.0000000
+sports:Italy-health:India                                      0.0000000
+technology:Italy-health:India                                  0.0000000
+business:Russian Federation-health:India                       0.0000000
+entertainment:Russian Federation-health:India                  0.8204626
+general:Russian Federation-health:India                        0.0000368
+health:Russian Federation-health:India                         0.9993344
+science:Russian Federation-health:India                        0.0001282
+sports:Russian Federation-health:India                         0.0000000
+technology:Russian Federation-health:India                     0.0000000
+business:United States-health:India                            0.0000000
+entertainment:United States-health:India                       0.0000000
+general:United States-health:India                             0.0000000
+health:United States-health:India                              0.0000000
+science:United States-health:India                             0.0000000
+sports:United States-health:India                              0.0000000
+technology:United States-health:India                          0.0000000
+sports:India-science:India                                     0.0290575
+technology:India-science:India                                 1.0000000
+business:Italy-science:India                                   0.2652401
+entertainment:Italy-science:India                              0.0000000
+general:Italy-science:India                                    0.0000000
+health:Italy-science:India                                     0.0000000
+science:Italy-science:India                                    0.0000000
+sports:Italy-science:India                                     0.0007354
+technology:Italy-science:India                                 0.5023716
+business:Russian Federation-science:India                      0.0000000
+entertainment:Russian Federation-science:India                 0.0000000
+general:Russian Federation-science:India                       0.0000000
+health:Russian Federation-science:India                        0.0000000
+science:Russian Federation-science:India                       0.0000000
+sports:Russian Federation-science:India                        0.0009577
+technology:Russian Federation-science:India                    0.9969630
+business:United States-science:India                           0.0000000
+entertainment:United States-science:India                      0.0000000
+general:United States-science:India                            0.0000000
+health:United States-science:India                             0.0000000
+science:United States-science:India                            0.0207942
+sports:United States-science:India                             0.0516047
+technology:United States-science:India                         0.6175567
+technology:India-sports:India                                  0.0020522
+business:Italy-sports:India                                    0.0000000
+entertainment:Italy-sports:India                               0.0000000
+general:Italy-sports:India                                     0.0000000
+health:Italy-sports:India                                      0.0000000
+science:Italy-sports:India                                     0.0000000
+sports:Italy-sports:India                                      0.0000000
+technology:Italy-sports:India                                  1.0000000
+business:Russian Federation-sports:India                       0.0000000
+entertainment:Russian Federation-sports:India                  0.0000000
+general:Russian Federation-sports:India                        0.0000000
+health:Russian Federation-sports:India                         0.0000000
+science:Russian Federation-sports:India                        0.0000000
+sports:Russian Federation-sports:India                         1.0000000
+technology:Russian Federation-sports:India                     0.0000000
+business:United States-sports:India                            0.0000000
+entertainment:United States-sports:India                       0.0000000
+general:United States-sports:India                             0.0000000
+health:United States-sports:India                              0.0000000
+science:United States-sports:India                             0.0000000
+sports:United States-sports:India                              0.0000000
+technology:United States-sports:India                          0.0000000
+business:Italy-technology:India                                0.0001205
+entertainment:Italy-technology:India                           0.0000000
+general:Italy-technology:India                                 0.0000000
+health:Italy-technology:India                                  0.0000000
+science:Italy-technology:India                                 0.0000000
+sports:Italy-technology:India                                  0.0000000
+technology:Italy-technology:India                              0.2727904
+business:Russian Federation-technology:India                   0.0000000
+entertainment:Russian Federation-technology:India              0.0000000
+general:Russian Federation-technology:India                    0.0000000
+health:Russian Federation-technology:India                     0.0000000
+science:Russian Federation-technology:India                    0.0000000
+sports:Russian Federation-technology:India                     0.0000068
+technology:Russian Federation-technology:India                 0.2555102
+business:United States-technology:India                        0.0000000
+entertainment:United States-technology:India                   0.0000000
+general:United States-technology:India                         0.0000000
+health:United States-technology:India                          0.0000000
+science:United States-technology:India                         0.0007008
+sports:United States-technology:India                          0.0000031
+technology:United States-technology:India                      0.0548023
+entertainment:Italy-business:Italy                             0.0000000
+general:Italy-business:Italy                                   0.0000000
+health:Italy-business:Italy                                    0.0000000
+science:Italy-business:Italy                                   0.0000000
+sports:Italy-business:Italy                                    0.9822958
+technology:Italy-business:Italy                                0.0000000
+business:Russian Federation-business:Italy                     0.0000000
+entertainment:Russian Federation-business:Italy                0.0000000
+general:Russian Federation-business:Italy                      0.0000000
+health:Russian Federation-business:Italy                       0.0000000
+science:Russian Federation-business:Italy                      0.0000000
+sports:Russian Federation-business:Italy                       0.0000000
+technology:Russian Federation-business:Italy                   0.9999290
+business:United States-business:Italy                          0.0000000
+entertainment:United States-business:Italy                     0.0000000
+general:United States-business:Italy                           0.0000000
+health:United States-business:Italy                            0.0000000
+science:United States-business:Italy                           0.9728729
+sports:United States-business:Italy                            1.0000000
+technology:United States-business:Italy                        1.0000000
+general:Italy-entertainment:Italy                              0.0000000
+health:Italy-entertainment:Italy                               0.0000000
+science:Italy-entertainment:Italy                              0.0000019
+sports:Italy-entertainment:Italy                               0.0257585
+technology:Italy-entertainment:Italy                           0.0000000
+business:Russian Federation-entertainment:Italy                0.0000031
+entertainment:Russian Federation-entertainment:Italy           0.0000000
+general:Russian Federation-entertainment:Italy                 0.0000000
+health:Russian Federation-entertainment:Italy                  0.0000000
+science:Russian Federation-entertainment:Italy                 0.0000000
+sports:Russian Federation-entertainment:Italy                  0.0000000
+technology:Russian Federation-entertainment:Italy              0.0000000
+business:United States-entertainment:Italy                     0.0000000
+entertainment:United States-entertainment:Italy                0.9026400
+general:United States-entertainment:Italy                      0.0000000
+health:United States-entertainment:Italy                       0.0000000
+science:United States-entertainment:Italy                      1.0000000
+sports:United States-entertainment:Italy                       0.0000123
+technology:United States-entertainment:Italy                   0.1108515
+health:Italy-general:Italy                                     0.0000000
+science:Italy-general:Italy                                    0.0000000
+sports:Italy-general:Italy                                     0.0000000
+technology:Italy-general:Italy                                 0.0000000
+business:Russian Federation-general:Italy                      0.0000000
+entertainment:Russian Federation-general:Italy                 0.0000000
+general:Russian Federation-general:Italy                       1.0000000
+health:Russian Federation-general:Italy                        1.0000000
+science:Russian Federation-general:Italy                       0.0000000
+sports:Russian Federation-general:Italy                        0.0000000
+technology:Russian Federation-general:Italy                    0.0000000
+business:United States-general:Italy                           0.0000000
+entertainment:United States-general:Italy                      0.0000000
+general:United States-general:Italy                            0.0000000
+health:United States-general:Italy                             1.0000000
+science:United States-general:Italy                            0.0000000
+sports:United States-general:Italy                             0.0000000
+technology:United States-general:Italy                         0.0000000
+science:Italy-health:Italy                                     0.0182042
+sports:Italy-health:Italy                                      0.0000000
+technology:Italy-health:Italy                                  0.0000000
+business:Russian Federation-health:Italy                       0.0029096
+entertainment:Russian Federation-health:Italy                  0.9999998
+general:Russian Federation-health:Italy                        0.0000000
+health:Russian Federation-health:Italy                         0.3276550
+science:Russian Federation-health:Italy                        1.0000000
+sports:Russian Federation-health:Italy                         0.0000000
+technology:Russian Federation-health:Italy                     0.0000000
+business:United States-health:Italy                            0.5014779
+entertainment:United States-health:Italy                       0.0000000
+general:United States-health:Italy                             0.0000000
+health:United States-health:Italy                              0.0000000
+science:United States-health:Italy                             0.0000007
+sports:United States-health:Italy                              0.0000000
+technology:United States-health:Italy                          0.0000000
+sports:Italy-science:Italy                                     0.0000000
+technology:Italy-science:Italy                                 0.0000000
+business:Russian Federation-science:Italy                      1.0000000
+entertainment:Russian Federation-science:Italy                 0.0000001
+general:Russian Federation-science:Italy                       0.0000000
+health:Russian Federation-science:Italy                        0.0004690
+science:Russian Federation-science:Italy                       0.4507135
+sports:Russian Federation-science:Italy                        0.0000000
+technology:Russian Federation-science:Italy                    0.0000000
+business:United States-science:Italy                           1.0000000
+entertainment:United States-science:Italy                      0.2510979
+general:United States-science:Italy                            0.0000000
+health:United States-science:Italy                             0.0000000
+science:United States-science:Italy                            0.1034264
+sports:United States-science:Italy                             0.0000000
+technology:United States-science:Italy                         0.0000000
+technology:Italy-sports:Italy                                  0.0000000
+business:Russian Federation-sports:Italy                       0.0000000
+entertainment:Russian Federation-sports:Italy                  0.0000000
+general:Russian Federation-sports:Italy                        0.0000000
+health:Russian Federation-sports:Italy                         0.0000000
+science:Russian Federation-sports:Italy                        0.0000000
+sports:Russian Federation-sports:Italy                         0.0000000
+technology:Russian Federation-sports:Italy                     0.0619865
+business:United States-sports:Italy                            0.0000000
+entertainment:United States-sports:Italy                       0.0000002
+general:United States-sports:Italy                             0.0000000
+health:United States-sports:Italy                              0.0000000
+science:United States-sports:Italy                             1.0000000
+sports:United States-sports:Italy                              0.9999999
+technology:United States-sports:Italy                          1.0000000
+business:Russian Federation-technology:Italy                   0.0000000
+entertainment:Russian Federation-technology:Italy              0.0000000
+general:Russian Federation-technology:Italy                    0.0000000
+health:Russian Federation-technology:Italy                     0.0000000
+science:Russian Federation-technology:Italy                    0.0000000
+sports:Russian Federation-technology:Italy                     0.9651980
+technology:Russian Federation-technology:Italy                 0.0000000
+business:United States-technology:Italy                        0.0000000
+entertainment:United States-technology:Italy                   0.0000000
+general:United States-technology:Italy                         0.0000000
+health:United States-technology:Italy                          0.0000000
+science:United States-technology:Italy                         0.0000000
+sports:United States-technology:Italy                          0.0000000
+technology:United States-technology:Italy                      0.0000001
+entertainment:Russian Federation-business:Russian Federation   0.0000000
+general:Russian Federation-business:Russian Federation         0.0000000
+health:Russian Federation-business:Russian Federation          0.0002313
+science:Russian Federation-business:Russian Federation         0.1637795
+sports:Russian Federation-business:Russian Federation          0.0000000
+technology:Russian Federation-business:Russian Federation      0.0000000
+business:United States-business:Russian Federation             0.9999514
+entertainment:United States-business:Russian Federation        0.3896286
+general:United States-business:Russian Federation              0.0000000
+health:United States-business:Russian Federation               0.0000000
+science:United States-business:Russian Federation              0.1529333
+sports:United States-business:Russian Federation               0.0000000
+technology:United States-business:Russian Federation           0.0000000
+general:Russian Federation-entertainment:Russian Federation    0.0000000
+health:Russian Federation-entertainment:Russian Federation     0.7192494
+science:Russian Federation-entertainment:Russian Federation    0.5900136
+sports:Russian Federation-entertainment:Russian Federation     0.0000000
+technology:Russian Federation-entertainment:Russian Federation 0.0000000
+business:United States-entertainment:Russian Federation        0.0000976
+entertainment:United States-entertainment:Russian Federation   0.0000000
+general:United States-entertainment:Russian Federation         0.0000000
+health:United States-entertainment:Russian Federation          0.0000000
+science:United States-entertainment:Russian Federation         0.0000000
+sports:United States-entertainment:Russian Federation          0.0000000
+technology:United States-entertainment:Russian Federation      0.0000000
+health:Russian Federation-general:Russian Federation           1.0000000
+science:Russian Federation-general:Russian Federation          0.0000000
+sports:Russian Federation-general:Russian Federation           0.0000000
+technology:Russian Federation-general:Russian Federation       0.0000000
+business:United States-general:Russian Federation              0.0000000
+entertainment:United States-general:Russian Federation         0.0000000
+general:United States-general:Russian Federation               0.0000000
+health:United States-general:Russian Federation                1.0000000
+science:United States-general:Russian Federation               0.0000000
+sports:United States-general:Russian Federation                0.0000000
+technology:United States-general:Russian Federation            0.0000000
+science:Russian Federation-health:Russian Federation           0.0755318
+sports:Russian Federation-health:Russian Federation            0.0000000
+technology:Russian Federation-health:Russian Federation        0.0000000
+business:United States-health:Russian Federation               0.0044421
+entertainment:United States-health:Russian Federation          0.0000003
+general:United States-health:Russian Federation                0.0561277
+health:United States-health:Russian Federation                 1.0000000
+science:United States-health:Russian Federation                0.0000000
+sports:United States-health:Russian Federation                 0.0000000
+technology:United States-health:Russian Federation             0.0000000
+sports:Russian Federation-science:Russian Federation           0.0000000
+technology:Russian Federation-science:Russian Federation       0.0000000
+business:United States-science:Russian Federation              0.9993777
+entertainment:United States-science:Russian Federation         0.0000000
+general:United States-science:Russian Federation               0.0000000
+health:United States-science:Russian Federation                0.0000000
+science:United States-science:Russian Federation               0.0000277
+sports:United States-science:Russian Federation                0.0000000
+technology:United States-science:Russian Federation            0.0000000
+technology:Russian Federation-sports:Russian Federation        0.0000000
+business:United States-sports:Russian Federation               0.0000000
+entertainment:United States-sports:Russian Federation          0.0000000
+general:United States-sports:Russian Federation                0.0000000
+health:United States-sports:Russian Federation                 0.0000000
+science:United States-sports:Russian Federation                0.0000000
+sports:United States-sports:Russian Federation                 0.0000000
+technology:United States-sports:Russian Federation             0.0000000
+business:United States-technology:Russian Federation           0.0000000
+entertainment:United States-technology:Russian Federation      0.0000000
+general:United States-technology:Russian Federation            0.0000000
+health:United States-technology:Russian Federation             0.0000000
+science:United States-technology:Russian Federation            0.4370864
+sports:United States-technology:Russian Federation             0.9197659
+technology:United States-technology:Russian Federation         0.9999967
+entertainment:United States-business:United States             0.0002448
+general:United States-business:United States                   0.0000000
+health:United States-business:United States                    0.0000000
+science:United States-business:United States                   0.0042312
+sports:United States-business:United States                    0.0000000
+technology:United States-business:United States                0.0000000
+general:United States-entertainment:United States              0.0000000
+health:United States-entertainment:United States               0.0000000
+science:United States-entertainment:United States              0.9993120
+sports:United States-entertainment:United States               0.0000000
+technology:United States-entertainment:United States           0.0001287
+health:United States-general:United States                     0.0000000
+science:United States-general:United States                    0.0000000
+sports:United States-general:United States                     0.0000000
+technology:United States-general:United States                 0.0000000
+science:United States-health:United States                     0.0000000
+sports:United States-health:United States                      0.0000000
+technology:United States-health:United States                  0.0000000
+sports:United States-science:United States                     0.9994521
+technology:United States-science:United States                 0.9999613
+technology:United States-sports:United States                  1.0000000

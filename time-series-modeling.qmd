@@ -672,10 +672,7 @@ acf_daily_sentiment / acf_diff2_daily_sentiment
 
 **For modeling, we will be predicting monthly sentiment and bias hence the following parameter choices and modeling exercises will be focus on monthly sentiment and bias**
 
-Parameter choices
-- d = 1 since first order differencing is sufficient for stationarity
-- p (AR order): From the PACF plots, we see significant spikes at lags 1 and 2 so we will test p = 0, 1, 2
-- q (MA order) : From the ACF plot, we see a signficant correlation at lag 1 so we will test q = 0,1,2
+Parameter choices - d = 1 since first order differencing is sufficient for stationarity - p (AR order): From the PACF plots, we see significant spikes at lags 1 and 2 so we will test p = 0, 1, 2 - q (MA order) : From the ACF plot, we see a signficant correlation at lag 1 so we will test q = 0,1,2
 
 # Parameter search for monthly sentiment
 
@@ -858,24 +855,23 @@ Manual model:
 model_manual_sentiment <- capture.output(sarima(sentiment_monthly_ts, 0,1,0))
 ```
 
-- The residual plot show consistent fluctuation around zero and but no constant variation which shows that the model might need improvement slightly
-- The ACF plot does not reveal any significant correlations 
-- The Q-Q plot indicates that the residuals follow a near-normal distribution, with minor deviations at the tails, which is typical in time series data
-- The Ljung-Box Test p-values remain mostly above the 0.05 significance level, implying no significant autocorrelations left in the residuals and concluding that the model is adequate
+-   The residual plot show consistent fluctuation around zero and but no constant variation which shows that the model might need improvement slightly
+-   The ACF plot does not reveal any significant correlations
+-   The Q-Q plot indicates that the residuals follow a near-normal distribution, with minor deviations at the tails, which is typical in time series data
+-   The Ljung-Box Test p-values remain mostly above the 0.05 significance level, implying no significant autocorrelations left in the residuals and concluding that the model is adequate
 
 ```{r}
 model_auto_sentiment <- capture.output(sarima(sentiment_monthly_ts, 1,0,1))
 ```
 
-- The residual plot does not show consistent fluctuation around zero and no constant variation which shows that the model might need improvement
-- The ACF plot does not reveal any significant correlations 
-- The Q-Q plot indicates that the residuals follow a near-normal distribution, with major deviations at the tails, 
-- The Ljung-Box Test p-values remain mostly above the 0.05 significance level, implying  no significant autocorrelations left in the residuals and concluding that the model might be adequate
+-   The residual plot does not show consistent fluctuation around zero and no constant variation which shows that the model might need improvement
+-   The ACF plot does not reveal any significant correlations
+-   The Q-Q plot indicates that the residuals follow a near-normal distribution, with major deviations at the tails,
+-   The Ljung-Box Test p-values remain mostly above the 0.05 significance level, implying no significant autocorrelations left in the residuals and concluding that the model might be adequate
 
-**Both models perform similarly, with the residual, acf, and normal q-q plot almost identical. The only different plots are the Ljung-Box statistic plot with the automatic plot producing p-values that are significantly > 0.05**
+**Both models perform similarly, with the residual, acf, and normal q-q plot almost identical. The only different plots are the Ljung-Box statistic plot with the automatic plot producing p-values that are significantly \> 0.05**
 
 # Benchmark methods and models
-
 
 ```{r}
 # Define model orders for comparison
@@ -897,7 +893,6 @@ manual_forecast <- forecast(manual_arima, h = 6)
 auto_arima <- Arima(train_data, order = auto_order, include.drift = FALSE)
 auto_forecast <- forecast(auto_arima, h = 6)
 ```
-
 
 ```{r}
 # Benchmark methods
@@ -933,7 +928,6 @@ knitr::kable(comparison, digits = 3, caption = "Model Performance Comparison")
 *The random walk with drift has a lower MAE, RMSE, and MAPE, outperforming both the Manual ARIMA and Auto Arima*
 
 **Plot forecasts with manual arima as chosen model to include with baseline models as it outperforms auto arima**
-
 
 ```{r}
 # Forecast visualization

@@ -1,0 +1,947 @@
+---
+title: "Time Series Analysis"
+format: html
+editor: visual
+---
+
+## Introduction
+
+This document contains time series analysis for the DSAN5100 final project.
+
+# Load data files and preprocess
+
+```{r}
+# Load required libraries for R
+library(tidyverse)
+library(lubridate)
+library(arrow)
+library(plotly)
+library(zoo)
+library(forecast)  
+library(imputeTS)
+library(tseries)
+library(patchwork)
+library(astsa)
+
+# Set Arrow option to skip null characters
+options(arrow.skip_nul = TRUE)
+
+# Set seed for reproducibility
+set.seed(42)
+```
+
+```{r}
+# Load the data
+
+argentina_df <- read_parquet("data/argentina_data_final.parquet")
+canada_df <- read_parquet("data/canada_data_final.parquet")
+china_df <- read_parquet("data/china_data_final.parquet")
+india_df <- read_parquet("data/india_data_final.parquet")
+italy_df <- read_parquet("data/italy_data_final.parquet")
+russia_df <- read_parquet("data/russia_data_final.parquet")
+us_df <- read_parquet("data/us_data_final.parquet")
+
+
+head(us_df)
+```
+
+```{r}
+# Change publishedAt column into a date type
+
+# Function to convert publishedAt to date type
+convert_date_column <- function(df) {
+  df <- df %>%
+    mutate(publishedAt = as.Date(publishedAt))
+  return(df)
+}
+
+# Apply date conversion to all dataframes
+argentina_df <- convert_date_column(argentina_df)
+canada_df <- convert_date_column(canada_df)
+china_df <- convert_date_column(china_df)
+india_df <- convert_date_column(india_df)
+italy_df <- convert_date_column(italy_df)
+russia_df <- convert_date_column(russia_df)
+us_df <- convert_date_column(us_df)
+
+# Check the data type conversion
+cat("Date type conversion completed:\n")
+cat("publishedAt column type for US data:", class(us_df$publishedAt), "\n")
+```
+
+```{r}
+# Check date range for various country data
+
+cat("Date range for US data:", as.character(range(us_df$publishedAt, na.rm = TRUE)), "\n")
+cat("Date range for Argentina data:", as.character(range(argentina_df$publishedAt, na.rm = TRUE)), "\n")
+cat("Date range for Canada data:", as.character(range(canada_df$publishedAt, na.rm = TRUE)), "\n")
+cat("Date range for China data:", as.character(range(china_df$publishedAt, na.rm = TRUE)), "\n")
+cat("Date range for India data:", as.character(range(india_df$publishedAt, na.rm = TRUE)), "\n")
+cat("Date range for Italy data:", as.character(range(italy_df$publishedAt, na.rm = TRUE)), "\n")
+cat("Date range for Russia data:", as.character(range(russia_df$publishedAt, na.rm = TRUE)), "\n")
+```
+
+*All of the countries have an end date of 2021-11-29 after which the data was no longer collected. The earliest data for the published articles range from 2010-11-24 for Russia to 2019-11-23 for China*
+
+```{r}
+# Combine the country datasets into df_countries
+
+# Set Arrow option to handle null characters
+options(arrow.skip_nul = TRUE)
+
+df_countries <- bind_rows(
+  us_df, 
+  canada_df, 
+  china_df, 
+  india_df, 
+  italy_df, 
+  russia_df, 
+  argentina_df
+)
+
+# Check the combined dataset
+cat("Combined dataset dimensions:", nrow(df_countries), "rows,", ncol(df_countries), "columns\n")
+cat("Countries included:", unique(df_countries$location), "\n")
+```
+
+```{r}
+# Filter the dataset to start from 2020 for more focused analysis
+df_countries_2020 <- df_countries %>% filter(year > 2019)
+```
+
+# Analysis Health, General, Science categories combined
+
+*In to capture the sentiment around COVID-19 and also leverage the scarse related data in the dataset, we have combined the Health, Science, and General category to explore the sentiment and bias during the COVID-19 pandemic (2020-02 to 2021-11)*
+
+```{r}
+# Combined time series plot for sentiment and bias across health, general, and science categories, daily
+
+# Prepare daily combined data for USA with both sentiment and bias for health, general, and science categories
+usa_combined_daily <- df_countries %>%
+  filter(location == "United States", category %in% c("health", "general", "science", "business")) %>%
+  group_by(publishedAt) %>%
+  summarise(
+    avg_sentiment = mean(compound, na.rm = TRUE),
+    avg_bias = mean(bias_score, na.rm = TRUE),
+    n_articles = n(),
+    .groups = 'drop'
+  ) %>%
+  rename(date = publishedAt) %>%
+  # Transform to long format for plotting
+  pivot_longer(
+    cols = c(avg_sentiment, avg_bias),
+    names_to = "metric",
+    values_to = "score"
+  ) %>%
+  mutate(
+    metric = case_when(
+      metric == "avg_sentiment" ~ "Sentiment",
+      metric == "avg_bias" ~ "Bias"
+    )
+  )
+
+head(usa_combined_daily)
+```
+
+```{r}
+# USA daily transformed
+
+# Transform usa_combined_daily to wide format with date, sentiment, bias columns
+usa_combined_daily_transformed <- usa_combined_daily %>%
+  pivot_wider(
+    names_from = metric,
+    values_from = score
+  ) %>%
+  select(date, Sentiment, Bias) %>%
+  rename(
+    sentiment = Sentiment,
+    bias = Bias
+  )
+
+head(usa_combined_daily_transformed)
+```
+
+```{r}
+# Create monthly aggregated data from the original df_countries data
+usa_combined_monthly <- df_countries %>%
+  filter(location == "United States", category %in% c("health", "general", "science", "business")) %>%
+  mutate(year_month = floor_date(publishedAt, "month")) %>%
+  group_by(year_month) %>%
+  summarise(
+    sentiment = mean(compound, na.rm = TRUE),
+    bias = mean(bias_score, na.rm = TRUE),
+    n_articles = n(),
+    .groups = 'drop'
+  ) %>%
+  select(year_month, sentiment, bias) %>%
+  arrange(year_month)
+
+head(usa_combined_monthly)
+cat("Monthly data range:", as.character(range(usa_combined_monthly$year_month)), "\n")
+cat("Number of months:", nrow(usa_combined_monthly), "\n")
+```
+
+**Fill in missing values**
+
+```{r}
+# Fill in missing data using Kalman filter
+
+# Fill in missing data for daily df
+
+# Create a complete date sequence to identify missing days
+date_range <- seq(from = min(usa_combined_daily_transformed$date), 
+                  to = max(usa_combined_daily_transformed$date), 
+                  by = "day")
+
+# Create complete daily dataframe with all dates
+usa_daily_complete <- data.frame(date = date_range) %>%
+  left_join(usa_combined_daily_transformed, by = "date")
+
+# Check for missing values
+cat("Missing values in daily data:\n")
+cat("Sentiment:", sum(is.na(usa_daily_complete$sentiment)), "\n")
+cat("Bias:", sum(is.na(usa_daily_complete$bias)), "\n")
+
+# Apply Kalman filter to fill missing values
+usa_daily_filled <- usa_daily_complete %>%
+  mutate(
+    sentiment_filled = na_kalman(sentiment, model = "StructTS", smooth = TRUE),
+    bias_filled = na_kalman(bias, model = "StructTS", smooth = TRUE)
+  ) %>%
+  select(date, sentiment = sentiment_filled, bias = bias_filled)
+
+cat("Daily data after Kalman filtering:\n")
+cat("Total days:", nrow(usa_daily_filled), "\n")
+cat("Missing values - Sentiment:", sum(is.na(usa_daily_filled$sentiment)), "\n")
+cat("Missing values - Bias:", sum(is.na(usa_daily_filled$bias)), "\n")
+head(usa_daily_filled)
+```
+
+```{r}
+# Fill in missing data for monthly df
+
+# Create a complete monthly sequence
+monthly_range <- seq(from = floor_date(min(usa_combined_monthly$year_month), "month"),
+                     to = floor_date(max(usa_combined_monthly$year_month), "month"),
+                     by = "month")
+
+# Create complete monthly dataframe with all months
+usa_monthly_complete <- data.frame(year_month = monthly_range) %>%
+  left_join(usa_combined_monthly, by = "year_month")
+
+# Check for missing values
+cat("\nMissing values in monthly data:\n")
+cat("Sentiment:", sum(is.na(usa_monthly_complete$sentiment)), "\n")
+cat("Bias:", sum(is.na(usa_monthly_complete$bias)), "\n")
+
+# Apply Kalman filter to fill missing values (if any)
+# Check if we actually have missing values before applying Kalman filter
+if(any(is.na(usa_monthly_complete$sentiment)) || any(is.na(usa_monthly_complete$bias))) {
+  cat("Applying Kalman filter to fill missing monthly values...\n")
+  usa_monthly_filled <- usa_monthly_complete %>%
+    mutate(
+      sentiment_filled = na_kalman(sentiment, model = "StructTS", smooth = TRUE),
+      bias_filled = na_kalman(bias, model = "StructTS", smooth = TRUE)
+    ) %>%
+    select(year_month, sentiment = sentiment_filled, bias = bias_filled)
+} else {
+  cat("No missing values found in monthly data - using original data...\n")
+  usa_monthly_filled <- usa_monthly_complete %>%
+    select(year_month, sentiment, bias)
+}
+
+cat("Monthly data after Kalman filtering:\n")
+cat("Total months:", nrow(usa_monthly_filled), "\n")
+cat("Missing values - Sentiment:", sum(is.na(usa_monthly_filled$sentiment)), "\n")
+cat("Missing values - Bias:", sum(is.na(usa_monthly_filled$bias)), "\n")
+head(usa_monthly_filled)
+```
+
+**Conversion of dataframes into time series**
+
+```{r}
+# Convert daily df into a time series
+
+# Extract the start date for daily time series
+daily_start_date <- as.Date(min(usa_daily_filled$date))
+daily_start_year <- as.numeric(format(daily_start_date, "%Y"))
+daily_start_yday <- as.numeric(format(daily_start_date, "%j"))
+
+# Create daily time series objects
+sentiment_daily_ts <- ts(usa_daily_filled$sentiment, 
+                        start = c(daily_start_year, daily_start_yday), 
+                        frequency = 365.25)
+
+bias_daily_ts <- ts(usa_daily_filled$bias, 
+                   start = c(daily_start_year, daily_start_yday), 
+                   frequency = 365.25)
+
+# Display basic info about the time series
+cat("Daily Time Series Information:\n")
+cat("Sentiment TS - Start:", paste(start(sentiment_daily_ts), collapse = ", "), 
+    "End:", paste(end(sentiment_daily_ts), collapse = ", "), 
+    "Frequency:", frequency(sentiment_daily_ts), "\n")
+cat("Bias TS - Start:", paste(start(bias_daily_ts), collapse = ", "), 
+    "End:", paste(end(bias_daily_ts), collapse = ", "), 
+    "Frequency:", frequency(bias_daily_ts), "\n")
+```
+
+```{r}
+# Convert monthly df into a time series
+
+# Extract the start date for monthly time series
+monthly_start_date <- as.Date(min(usa_monthly_filled$year_month))
+monthly_start_year <- as.numeric(format(monthly_start_date, "%Y"))
+monthly_start_month <- as.numeric(format(monthly_start_date, "%m"))
+
+# Create monthly time series objects
+sentiment_monthly_ts <- ts(usa_monthly_filled$sentiment, 
+                          start = c(monthly_start_year, monthly_start_month), 
+                          frequency = 12)
+
+bias_monthly_ts <- ts(usa_monthly_filled$bias, 
+                     start = c(monthly_start_year, monthly_start_month), 
+                     frequency = 12)
+
+# Display basic info about the time series
+cat("Monthly Time Series Information:\n")
+cat("Sentiment TS - Start:", paste(start(sentiment_monthly_ts), collapse = ", "), 
+    "End:", paste(end(sentiment_monthly_ts), collapse = ", "), 
+    "Frequency:", frequency(sentiment_monthly_ts), "\n")
+cat("Bias TS - Start:", paste(start(bias_monthly_ts), collapse = ", "), 
+    "End:", paste(end(bias_monthly_ts), collapse = ", "), 
+    "Frequency:", frequency(bias_monthly_ts), "\n")
+
+# Show first few values of each time series
+cat("\nFirst 6 values of sentiment_monthly_ts:\n")
+print(head(sentiment_monthly_ts))
+cat("\nFirst 6 values of bias_monthly_ts:\n")
+print(head(bias_monthly_ts))
+```
+
+**Series Visualization**
+
+```{r}
+# Plot daily sentiment
+
+# Create date sequence for plotting
+daily_dates <- usa_daily_filled$date
+
+fig_daily_sentiment <- plot_ly(x = daily_dates, y = as.numeric(sentiment_daily_ts), 
+                               type = 'scatter', mode = 'lines',
+                               line = list(color = 'steelblue', width = 1.5),
+                               name = 'Daily Sentiment') %>%
+  layout(title = "Daily Sentiment Analysis - USA Combined Categories (Health, General, Science, Business)",
+         xaxis = list(title = "Date"),
+         yaxis = list(title = "Sentiment Score"),
+         hovermode = 'x unified')
+
+fig_daily_sentiment
+```
+
+```{r}
+# Plot monthly sentiment
+
+# Create date sequence for monthly plotting
+monthly_dates <- usa_monthly_filled$year_month
+
+fig_monthly_sentiment <- plot_ly(x = monthly_dates, y = as.numeric(sentiment_monthly_ts), 
+                                 type = 'scatter', mode = 'lines+markers',
+                                 line = list(color = 'darkblue', width = 2),
+                                 marker = list(size = 6, color = 'darkblue'),
+                                 name = 'Monthly Sentiment') %>%
+  layout(title = "Monthly Sentiment Analysis - USA Combined Categories (Health, General, Science, Business)",
+         xaxis = list(title = "Month"),
+         yaxis = list(title = "Average Sentiment Score"),
+         hovermode = 'x unified')
+
+fig_monthly_sentiment
+```
+
+```{r}
+# Plot daily bias
+
+fig_daily_bias <- plot_ly(x = daily_dates, y = as.numeric(bias_daily_ts), 
+                          type = 'scatter', mode = 'lines',
+                          line = list(color = 'coral', width = 1.5),
+                          name = 'Daily Bias') %>%
+  layout(title = "Daily Bias Analysis - USA Combined Categories (Health, General, Science, Business)",
+         xaxis = list(title = "Date"),
+         yaxis = list(title = "Bias Score"),
+         hovermode = 'x unified')
+
+fig_daily_bias
+```
+
+```{r}
+# Plot monthly bias
+
+fig_monthly_bias <- plot_ly(x = monthly_dates, y = as.numeric(bias_monthly_ts), 
+                            type = 'scatter', mode = 'lines+markers',
+                            line = list(color = 'darkred', width = 2),
+                            marker = list(size = 6, color = 'darkred'),
+                            name = 'Monthly Bias') %>%
+  layout(title = "Monthly Bias Analysis - USA Combined Categories (Health, General, Science, Business)",
+         xaxis = list(title = "Month"),
+         yaxis = list(title = "Average Bias Score"),
+         hovermode = 'x unified')
+
+fig_monthly_bias
+```
+
+**ADF Test for Stationarity**
+
+```{r}
+# ADF Test for stationarity of daily data
+
+cat("=== ADF Test Results for Daily Time Series ===\n\n")
+
+# ADF test for daily sentiment
+cat("Daily Sentiment ADF Test:\n")
+adf_daily_sentiment <- adf.test(sentiment_daily_ts, alternative = "stationary")
+print(adf_daily_sentiment)
+cat("Interpretation: ")
+if(adf_daily_sentiment$p.value < 0.05) {
+  cat("Series is STATIONARY (p-value < 0.05)\n")
+} else {
+  cat("Series is NON-STATIONARY (p-value >= 0.05)\n")
+}
+
+cat("\n" , rep("-", 50), "\n\n")
+
+# ADF test for daily bias
+cat("Daily Bias ADF Test:\n")
+adf_daily_bias <- adf.test(bias_daily_ts, alternative = "stationary")
+print(adf_daily_bias)
+cat("Interpretation: ")
+if(adf_daily_bias$p.value < 0.05) {
+  cat("Series is STATIONARY (p-value < 0.05)\n")
+} else {
+  cat("Series is NON-STATIONARY (p-value >= 0.05)\n")
+}
+```
+
+```{r}
+# ADF Test for stationarity of monthly data
+
+cat("=== ADF Test Results for Monthly Time Series ===\n\n")
+
+# ADF test for monthly sentiment
+cat("Monthly Sentiment ADF Test:\n")
+adf_monthly_sentiment <- adf.test(sentiment_monthly_ts, alternative = "stationary")
+print(adf_monthly_sentiment)
+cat("Interpretation: ")
+if(adf_monthly_sentiment$p.value < 0.05) {
+  cat("Series is STATIONARY (p-value < 0.05)\n")
+} else {
+  cat("Series is NON-STATIONARY (p-value >= 0.05)\n")
+}
+
+cat("\n" , rep("-", 50), "\n\n")
+
+# ADF test for monthly bias
+cat("Monthly Bias ADF Test:\n")
+adf_monthly_bias <- adf.test(bias_monthly_ts, alternative = "stationary")
+print(adf_monthly_bias)
+cat("Interpretation: ")
+if(adf_monthly_bias$p.value < 0.05) {
+  cat("Series is STATIONARY (p-value < 0.05)\n")
+} else {
+  cat("Series is NON-STATIONARY (p-value >= 0.05)\n")
+}
+
+cat("\n=== Summary of Stationarity Tests ===\n")
+cat("Daily Sentiment:  ", ifelse(adf_daily_sentiment$p.value < 0.05, "STATIONARY", "NON-STATIONARY"), 
+    " (p =", round(adf_daily_sentiment$p.value, 4), ")\n")
+cat("Daily Bias:       ", ifelse(adf_daily_bias$p.value < 0.05, "STATIONARY", "NON-STATIONARY"), 
+    " (p =", round(adf_daily_bias$p.value, 4), ")\n")
+cat("Monthly Sentiment:", ifelse(adf_monthly_sentiment$p.value < 0.05, "STATIONARY", "NON-STATIONARY"), 
+    " (p =", round(adf_monthly_sentiment$p.value, 4), ")\n")
+cat("Monthly Bias:     ", ifelse(adf_monthly_bias$p.value < 0.05, "STATIONARY", "NON-STATIONARY"), 
+    " (p =", round(adf_monthly_bias$p.value, 4), ")\n")
+```
+
+**Differencing**
+
+```{r}
+# Difference the data
+diff_sentiment_daily <- diff(sentiment_daily_ts)
+
+# Plot the differenced data
+p1 <- ggplot() + 
+  geom_line(aes(x = time(diff_sentiment_daily), y = as.numeric(diff_sentiment_daily)), color = "steelblue") + 
+  labs(title = "Differenced Daily Sentiment - USA Combined Categories",
+       x = "Time",
+       y = "Differenced Sentiment Score") +
+  theme_minimal()
+
+# Display the Differenced Plot
+p1
+
+# Check stationarity of differenced series
+cat("ADF Test for Differenced Daily Sentiment:\n")
+adf_diff_daily_sentiment <- adf.test(diff_sentiment_daily, alternative = "stationary")
+print(adf_diff_daily_sentiment)
+cat("Interpretation: ")
+if(adf_diff_daily_sentiment$p.value < 0.05) {
+  cat("Differenced series is STATIONARY (p-value < 0.05)\n")
+} else {
+  cat("Differenced series is still NON-STATIONARY (p-value >= 0.05)\n")
+}
+```
+
+```{r}
+# No need to difference bias data as the series is stationary
+```
+
+```{r}
+# Difference the data
+diff_sentiment_monthly <- diff(sentiment_monthly_ts)
+
+# Plot the differenced data
+p3 <- ggplot() + 
+  geom_line(aes(x = time(diff_sentiment_monthly), y = as.numeric(diff_sentiment_monthly)), color = "darkblue") + 
+  labs(title = "Differenced Monthly Sentiment - USA Combined Categories",
+       x = "Time",
+       y = "Differenced Sentiment Score") +
+  theme_minimal()
+
+# Display the Differenced Plot
+p3
+
+# Check stationarity of differenced series
+cat("ADF Test for Differenced Monthly Sentiment:\n")
+adf_diff_monthly_sentiment <- adf.test(diff_sentiment_monthly, alternative = "stationary")
+print(adf_diff_monthly_sentiment)
+cat("Interpretation: ")
+if(adf_diff_monthly_sentiment$p.value < 0.05) {
+  cat("Differenced series is STATIONARY (p-value < 0.05)\n")
+} else {
+  cat("Differenced series is still NON-STATIONARY (p-value >= 0.05)\n")
+}
+```
+
+```{r}
+# Difference the data
+diff_bias_monthly <- diff(bias_monthly_ts)
+
+# Plot the differenced data
+p4 <- ggplot() + 
+  geom_line(aes(x = time(diff_bias_monthly), y = as.numeric(diff_bias_monthly)), color = "darkred") + 
+  labs(title = "Differenced Monthly Bias - USA Combined Categories",
+       x = "Time",
+       y = "Differenced Bias Score") +
+  theme_minimal()
+
+# Display the Differenced Plot
+p4
+```
+
+```{r}
+# Check stationarity of differenced series
+cat("ADF Test for Differenced Monthly Bias:\n")
+adf_diff_monthly_bias <- adf.test(diff_bias_monthly, alternative = "stationary")
+print(adf_diff_monthly_bias)
+cat("Interpretation: ")
+if(adf_diff_monthly_bias$p.value < 0.05) {
+  cat("Differenced series is STATIONARY (p-value < 0.05)\n")
+} else {
+  cat("Differenced series is still NON-STATIONARY (p-value >= 0.05)\n")
+}
+
+# Summary of differencing results
+cat("\n=== Summary of Differencing Results ===\n")
+cat("Differenced Daily Sentiment:   ", ifelse(adf_diff_daily_sentiment$p.value < 0.05, "STATIONARY", "NON-STATIONARY"), 
+    " (p =", round(adf_diff_daily_sentiment$p.value, 4), ")\n")
+cat("Differenced Daily Bias:        ", ifelse(adf_diff_daily_bias$p.value < 0.05, "STATIONARY", "NON-STATIONARY"), 
+    " (p =", round(adf_diff_daily_bias$p.value, 4), ")\n")
+cat("Differenced Monthly Sentiment: ", ifelse(adf_diff_monthly_sentiment$p.value < 0.05, "STATIONARY", "NON-STATIONARY"), 
+    " (p =", round(adf_diff_monthly_sentiment$p.value, 4), ")\n")
+cat("Differenced Monthly Bias:      ", ifelse(adf_diff_monthly_bias$p.value < 0.05, "STATIONARY", "NON-STATIONARY"), 
+    " (p =", round(adf_diff_monthly_bias$p.value, 4), ")\n")
+```
+
+**ACF Plots of differenced series**
+
+```{r}
+# Load patchwork library for combining plots
+library(patchwork)
+
+# ACF plot for differenced daily sentiment
+acf_daily_sentiment <- ggAcf(diff_sentiment_daily, 50) +
+  ggtitle("ACF of Differenced Daily Sentiment") +
+  theme_minimal()
+
+# ACF plot for differenced monthly sentiment
+acf_monthly_sentiment <- ggAcf(diff_sentiment_monthly, 20) +
+  ggtitle("ACF of Differenced Monthly Sentiment") +
+  theme_minimal()
+
+# ACF plot for differenced monthly bias
+acf_monthly_bias <- ggAcf(diff_bias_monthly, 20) +
+  ggtitle("ACF of Differenced Monthly Bias") +
+  theme_minimal()
+
+# PACF plot for differenced daily sentiment
+pacf_daily_sentiment <- ggPacf(diff_sentiment_daily, 50) +
+  ggtitle("PACF of Differenced Daily Sentiment") +
+  theme_minimal()
+
+# PACF plot for differenced monthly sentiment
+pacf_monthly_sentiment <- ggPacf(diff_sentiment_monthly, 20) +
+  ggtitle("PACF of Differenced Monthly Sentiment") +
+  theme_minimal()
+
+# PACF plot for differenced monthly bias
+pacf_monthly_bias <- ggPacf(diff_bias_monthly, 20) +
+  ggtitle("PACF of Differenced Monthly Bias") +
+  theme_minimal()
+```
+
+```{r}
+# Display ACF plots
+cat("ACF Plots for Differenced Series:\n")
+acf_daily_sentiment / acf_monthly_sentiment / acf_monthly_bias
+```
+
+```{r}
+# Display PACF plots
+cat("PACF Plots for Differenced Series:\n")
+pacf_daily_sentiment / pacf_monthly_sentiment / pacf_monthly_bias
+```
+
+*The ACF and PACF plot of the differenced daily sentiment show remaining autocorrelation autocorrelation, hence the need for second order differencing*
+
+*The ACF and PACF plot of the differenced monthly sentiment and bias show that most autocorrelations fall within the significance bounds after the first few lags*
+
+**Second order differencing for daily sentiment**
+
+```{r}
+# Second-order differencing for daily sentiment
+diff2_sentiment_daily <- diff(diff_sentiment_daily)
+
+# Plot the second-order differenced data
+p_diff2 <- ggplot() + 
+  geom_line(aes(x = time(diff2_sentiment_daily), y = as.numeric(diff2_sentiment_daily)), color = "steelblue") + 
+  labs(title = "Second-Order Differenced Daily Sentiment - USA Combined Categories",
+       x = "Time",
+       y = "Second-Order Differenced Sentiment Score") +
+  theme_minimal()
+
+# Display the plot
+p_diff2
+
+# Check stationarity of second-order differenced series
+cat("ADF Test for Second-Order Differenced Daily Sentiment:\n")
+adf_diff2_daily_sentiment <- adf.test(diff2_sentiment_daily, alternative = "stationary")
+print(adf_diff2_daily_sentiment)
+cat("Interpretation: ")
+if(adf_diff2_daily_sentiment$p.value < 0.05) {
+  cat("Second-order differenced series is STATIONARY (p-value < 0.05)\n")
+} else {
+  cat("Second-order differenced series is still NON-STATIONARY (p-value >= 0.05)\n")
+}
+```
+
+```{r}
+# ACF and PACF plots for second-order differenced daily sentiment
+
+# ACF plot for second-order differenced daily sentiment
+acf_diff2_daily_sentiment <- ggAcf(diff2_sentiment_daily, 50) +
+  ggtitle("ACF of Second-Order Differenced Daily Sentiment") +
+  theme_minimal()
+
+# PACF plot for second-order differenced daily sentiment
+pacf_diff2_daily_sentiment <- ggPacf(diff2_sentiment_daily, 50) +
+  ggtitle("PACF of Second-Order Differenced Daily Sentiment") +
+  theme_minimal()
+
+# Display both plots side by side
+cat("ACF and PACF Plots for Second-Order Differenced Daily Sentiment:\n")
+acf_diff2_daily_sentiment / pacf_diff2_daily_sentiment
+```
+
+```{r}
+# Comparison of first-order vs second-order differencing ACF plots
+cat("Comparison: First-Order vs Second-Order Differencing ACF:\n")
+acf_daily_sentiment / acf_diff2_daily_sentiment
+```
+
+*The ACF and PACF of the second order differencing show that the series may be over differenced as evidenced by potential negative correlation patterns*
+
+**For modeling, we will be predicting monthly sentiment and bias hence the following parameter choices and modeling exercises will be focus on monthly sentiment and bias**
+
+Parameter choices - d = 1 since first order differencing is sufficient for stationarity - p (AR order): From the PACF plots, we see significant spikes at lags 1 and 2 so we will test p = 0, 1, 2 - q (MA order) : From the ACF plot, we see a signficant correlation at lag 1 so we will test q = 0,1,2
+
+**Parameter search for monthly sentiment**
+
+```{r}
+# Model 1: ARIMA (0,1,0)
+model1 <- Arima(sentiment_monthly_ts, order = c(0, 1, 0), include.drift = FALSE)
+summary(model1)
+```
+
+```{r}
+# Model 2: ARIMA (1,1,0)
+model2 <- Arima(sentiment_monthly_ts, order = c(1, 1, 0), include.drift = FALSE)
+summary(model2)
+```
+
+```{r}
+# Model 3: ARIMA (2,1,0)
+model3 <- Arima(sentiment_monthly_ts, order = c(2, 1, 0), include.drift = FALSE)
+summary(model3)
+```
+
+```{r}
+# Model 4: ARIMA (0,1,1)
+model4 <- Arima(sentiment_monthly_ts, order = c(0, 1, 1), include.drift = FALSE)
+summary(model4)
+```
+
+```{r}
+# Model 5: ARIMA (0,1,2)
+model5 <- Arima(sentiment_monthly_ts, order = c(0, 1, 2), include.drift = FALSE)
+summary(model5)
+```
+
+```{r}
+# Model 6: ARIMA (1,1,1)
+model6 <- Arima(sentiment_monthly_ts, order = c(1, 1, 1), include.drift = FALSE)
+summary(model6)
+```
+
+```{r}
+# Model 7: ARIMA (1,1,2)
+model7 <- Arima(sentiment_monthly_ts, order = c(1, 1, 2), include.drift = FALSE)
+summary(model7)
+```
+
+```{r}
+# Model 8: ARIMA (2,1,2)
+model8 <- Arima(sentiment_monthly_ts, order = c(2, 1, 2), include.drift = FALSE)
+summary(model8)
+```
+
+*Model 1 : ARIMA (0,1,0) has the lowest AIC indicating to be the best model according to this manual selection process*
+
+**Loop based approach: Breaking terminal in VS Code**
+
+```{r}
+# Parameter search for monthly sentiment
+
+# Load necessary libraries
+library(knitr)
+
+# Define parameter ranges based on ACF/PACF analysis
+p_range <- 0:2  # AR order: test p = 0, 1, 2 based on PACF analysis
+d <- 1          # Differencing: d = 1 since first order differencing is sufficient
+q_range <- 0:2  # MA order: test q = 0, 1, 2 based on ACF analysis
+
+# Calculate total combinations
+n_combinations <- length(p_range) * length(q_range)
+cat("Testing", n_combinations, "ARIMA model combinations for monthly sentiment...\n\n")
+
+# Create an empty matrix to store results
+results_matrix <- matrix(NA, nrow = n_combinations, ncol = 6)
+
+```
+
+```{r}
+# Initialize index for matrix row
+i <- 1
+
+cat("Starting ARIMA parameter search...\n")
+
+# Loop through combinations of ARIMA model parameters
+for (p in p_range) {
+  for (q in q_range) {
+    cat("Testing ARIMA(", p, ",", d, ",", q, ")... ")
+    
+    # Try fit ARIMA model with comprehensive error handling
+    tryCatch({
+      # Check if the data has enough observations
+      if(length(sentiment_monthly_ts) < (p + q + d + 1)) {
+        cat("INSUFFICIENT DATA\n")
+        results_matrix[i, ] <- c(p, d, q, NA, NA, NA)
+      } else {
+        # Fit ARIMA model with specified (p,d,q) for monthly sentiment
+        model <- Arima(sentiment_monthly_ts, order = c(p, d, q), include.drift = FALSE)
+        
+        # Store model parameters and AIC/BIC/AICc values in matrix
+        results_matrix[i, ] <- c(p, d, q, model$aic, model$bic, model$aicc)
+        
+        # Print success
+        cat("SUCCESS - AIC:", round(model$aic, 3), "\n")
+      }
+      
+    }, warning = function(w) {
+      cat("WARNING:", w$message, "\n")
+      results_matrix[i, ] <- c(p, d, q, NA, NA, NA)
+    }, error = function(e) {
+      # If model fails to fit, store NA values and print error
+      cat("FAILED -", e$message, "\n")
+      results_matrix[i, ] <- c(p, d, q, NA, NA, NA)
+    })
+
+    # Increment row index
+    i <- i + 1
+    
+    # Add a small delay to prevent overwhelming the system
+    Sys.sleep(0.1)
+  }
+}
+
+cat("\nParameter search completed.\n")
+
+# Convert matrix to data frame
+results_df <- as.data.frame(results_matrix)
+colnames(results_df) <- c("p", "d", "q", "AIC", "BIC", "AICc")
+
+# Remove rows with NA values 
+results_df_clean <- results_df[complete.cases(results_df), ]
+
+cat("Successfully fitted models:", nrow(results_df_clean), "out of", nrow(results_df), "\n")
+
+if(nrow(results_df_clean) > 0) {
+  # Find the row with the lowest AIC, BIC, and AICc
+  best_aic_row <- which.min(results_df_clean$AIC)
+  best_bic_row <- which.min(results_df_clean$BIC)
+  best_aicc_row <- which.min(results_df_clean$AICc)
+  
+  # Display summary of best models
+  cat("\n=== Best Model Selection Results ===\n")
+  cat("Best model by AIC: ARIMA(", results_df_clean[best_aic_row, "p"], ",", 
+      results_df_clean[best_aic_row, "d"], ",", results_df_clean[best_aic_row, "q"], 
+      ") - AIC =", round(results_df_clean[best_aic_row, "AIC"], 3), "\n")
+  cat("Best model by BIC: ARIMA(", results_df_clean[best_bic_row, "p"], ",", 
+      results_df_clean[best_bic_row, "d"], ",", results_df_clean[best_bic_row, "q"], 
+      ") - BIC =", round(results_df_clean[best_bic_row, "BIC"], 3), "\n")
+  cat("Best model by AICc: ARIMA(", results_df_clean[best_aicc_row, "p"], ",", 
+      results_df_clean[best_aicc_row, "d"], ",", results_df_clean[best_aicc_row, "q"], 
+      ") - AICc =", round(results_df_clean[best_aicc_row, "AICc"], 3), "\n")
+  
+  # Display the results table with formatting
+  cat("\n")
+  knitr::kable(results_df_clean, 
+               align = 'c', 
+               caption = "ARIMA Model Comparison for Monthly Sentiment",
+               digits = 3)
+} else {
+  cat("ERROR: No models were successfully fitted. Check your data.\n")
+  print(summary(sentiment_monthly_ts))
+}
+```
+
+**Auto selection of best model**
+
+```{r}
+auto_sentiment_monthly.model <- auto.arima(sentiment_monthly_ts, seasonal = FALSE)
+cat("Auto-selected model:", auto_sentiment_monthly.model$arma[1], auto_sentiment_monthly.model$arma[6], auto_sentiment_monthly.model$arma[2])
+```
+
+```{r}
+summary(auto_sentiment_monthly.model)
+```
+
+*The auto selected model is ARIMA(1,0,1)*
+
+**Model diagnostics to get best best model**
+
+Manual model:
+
+```{r}
+model_manual_sentiment <- capture.output(sarima(sentiment_monthly_ts, 0,1,0))
+```
+
+-   The residual plot show consistent fluctuation around zero and but no constant variation which shows that the model might need improvement slightly
+-   The ACF plot does not reveal any significant correlations
+-   The Q-Q plot indicates that the residuals follow a near-normal distribution, with minor deviations at the tails, which is typical in time series data
+-   The Ljung-Box Test p-values remain mostly above the 0.05 significance level, implying no significant autocorrelations left in the residuals and concluding that the model is adequate
+
+```{r}
+model_auto_sentiment <- capture.output(sarima(sentiment_monthly_ts, 1,0,1))
+```
+
+-   The residual plot does not show consistent fluctuation around zero and no constant variation which shows that the model might need improvement
+-   The ACF plot does not reveal any significant correlations
+-   The Q-Q plot indicates that the residuals follow a near-normal distribution, with major deviations at the tails,
+-   The Ljung-Box Test p-values remain mostly above the 0.05 significance level, implying no significant autocorrelations left in the residuals and concluding that the model might be adequate
+
+**Both models perform similarly, with the residual, acf, and normal q-q plot almost identical. The only different plots are the Ljung-Box statistic plot with the automatic plot producing p-values that are significantly \> 0.05**
+
+# Benchmark methods and models
+
+```{r}
+# Define model orders for comparison
+manual_order <- c(0, 1, 0)
+auto_order <- c(1, 0, 1)
+```
+
+```{r}
+# Split data for evaluation (use last 6 observations for testing)
+n <- length(sentiment_monthly_ts)
+train_data <- sentiment_monthly_ts[1:(n-6)]
+test_data <- sentiment_monthly_ts[(n-5):n]
+
+# Fit manual model on training data
+manual_arima <- Arima(train_data, order = manual_order, include.drift = FALSE)
+manual_forecast <- forecast(manual_arima, h = 6)
+
+# Fit automatic model on training data
+auto_arima <- Arima(train_data, order = auto_order, include.drift = FALSE)
+auto_forecast <- forecast(auto_arima, h = 6)
+```
+
+```{r}
+# Benchmark methods
+# Naive method
+naive_forecast <- naive(train_data, h = 6)
+
+# Mean method  
+mean_forecast <- meanf(train_data, h = 6)
+
+# Random walk with drift
+rwf_forecast <- rwf(train_data, h = 6, drift = TRUE)
+
+# Calculate accuracy measures
+manual_accuracy <- accuracy(manual_forecast, test_data)
+auto_accuracy <- accuracy(auto_forecast, test_data)
+naive_accuracy <- accuracy(naive_forecast, test_data)
+mean_accuracy <- accuracy(mean_forecast, test_data)
+rwf_accuracy <- accuracy(rwf_forecast, test_data)
+
+# Create comparison table
+comparison <- data.frame(
+  Method = c("Manual ARIMA", "Auto ARIMA", "Naive", "Mean", "RWF with Drift"),
+  MAE = c(manual_accuracy[2,3], auto_accuracy[2,3], naive_accuracy[2,3], mean_accuracy[2,3], rwf_accuracy[2,3]),
+  RMSE = c(manual_accuracy[2,2], auto_accuracy[2,2], naive_accuracy[2,2], mean_accuracy[2,2], rwf_accuracy[2,2]),
+  MAPE = c(manual_accuracy[2,5], auto_accuracy[2,5], naive_accuracy[2,5], mean_accuracy[2,5], rwf_accuracy[2,5])
+)
+```
+
+```{r}
+knitr::kable(comparison, digits = 3, caption = "Model Performance Comparison")
+```
+
+*The random walk with drift has a lower MAE, RMSE, and MAPE, outperforming both the Manual ARIMA and Auto Arima*
+
+**Plot forecasts with manual arima as chosen model to include with baseline models as it outperforms auto arima**
+
+```{r}
+# Forecast visualization
+
+# Fit the best manual model on full data
+best_manual_fit <- Arima(sentiment_monthly_ts, order = manual_order, include.drift = FALSE)
+
+# Create forecast plot comparing all methods
+autoplot(sentiment_monthly_ts) +
+  autolayer(meanf(sentiment_monthly_ts, h = 60), series = "Mean", PI = FALSE) +
+  autolayer(naive(sentiment_monthly_ts, h = 60), series = "Naïve", PI = FALSE) +
+  autolayer(rwf(sentiment_monthly_ts, drift = TRUE, h = 60), series = "RWF with Drift", PI = FALSE) +
+  autolayer(forecast(best_manual_fit, h = 60), series = "Manual ARIMA", PI = FALSE) +
+  ggtitle("Sentiment Forecast Comparison") +
+  xlab("Time") + ylab("Sentiment (health, science, and general category)") +
+  guides(colour = guide_legend(title = "Forecast Methods")) +
+  theme_minimal()
+```

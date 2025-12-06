@@ -17,7 +17,7 @@ library(lubridate)
 library(arrow)
 library(plotly)
 library(zoo)
-library(forecast)  # For ACF and time series functions
+library(forecast)  
 
 # Set Arrow option to skip null characters
 options(arrow.skip_nul = TRUE)
@@ -65,7 +65,6 @@ cat("Date type conversion completed:\n")
 cat("publishedAt column type for US data:", class(us_df$publishedAt), "\n")
 ```
 
-
 ```{r}
 # Check date range for various country data
 
@@ -103,12 +102,55 @@ cat("Countries included:", unique(df_countries$location), "\n")
 
 ```{r}
 # Filter the dataset to start from 2020 for more focused analysis
-
 df_countries_2020 <- df_countries %>% filter(year > 2019)
 ```
 
-
 # Overall country sentiment trends by category
+
+```{r}
+# Average sentiment by category statistics
+
+# Calculate comprehensive statistics by category
+category_sentiment_stats <- df_countries %>%
+  group_by(category) %>%
+  summarise(
+    count = n(),
+    mean_sentiment = mean(compound, na.rm = TRUE),
+    median_sentiment = median(compound, na.rm = TRUE),
+    sd_sentiment = sd(compound, na.rm = TRUE),
+    min_sentiment = min(compound, na.rm = TRUE),
+    max_sentiment = max(compound, na.rm = TRUE),
+    q25 = quantile(compound, 0.25, na.rm = TRUE),
+    q75 = quantile(compound, 0.75, na.rm = TRUE),
+    .groups = 'drop'
+  ) %>%
+  arrange(desc(mean_sentiment))
+
+print("Sentiment Statistics by Category:")
+print(category_sentiment_stats)
+
+# Calculate percentage of articles in each sentiment category (positive, neutral, negative)
+sentiment_distribution <- df_countries %>%
+  mutate(
+    sentiment_category = case_when(
+      compound >= 0.05 ~ "Positive",
+      compound <= -0.05 ~ "Negative", 
+      TRUE ~ "Neutral"
+    )
+  ) %>%
+  group_by(category, sentiment_category) %>%
+  summarise(count = n(), .groups = 'drop') %>%
+  group_by(category) %>%
+  mutate(
+    total = sum(count),
+    percentage = round(count / total * 100, 1)
+  ) %>%
+  select(category, sentiment_category, count, percentage) %>%
+  arrange(category, desc(percentage))
+
+print("\nSentiment Distribution by Category (%):")
+print(sentiment_distribution)
+```
 
 ```{r}
 # View distribution of sentiment by category
@@ -124,12 +166,18 @@ df_countries %>%
   guides(fill = "none")  
 ```
 
-*The average sentiment across all categories is neutral (~0).*
+*The average sentiment across all categories is neutral (~0.0).*
 
 *NOTE: Typical threshold values (used in literature cited on the vaderSentiment documentation) are:*
 - *Positive sentiment: compound score >= 0.05*
 - *Neutral sentiment: compound score > -0.05 and compound score < 0.05*
 - *Negative sentiment: compound score <= -0.05*
+
+Sports, Technology, Entertainment have an average positive sentiment (0.05) while the rest of the categories are neutral. These three categories general induce excitement in society hence why they lean on the positive side. 
+
+Science has the smallest interquartile range, possibly due to how science news tends to be more objective and less emotionally loaded. 
+
+On the other hand, entertainment has the largest interquartile range as the news contains the widest emotional swings and the most sensationalized, highly varied content of any category, from celebrity scandals to movie releases
 
 **General Category**
 
@@ -248,6 +296,11 @@ ggplotly(business_plot) %>%
   layout(hovermode = "x")
 ```
 
+*The time series for business shows countries having neutral to positive sentiment on average across time. There are slight seasonal observations due to business cycles:*
+- New Year dips possible due to slowed down economic activity during the December holidays and negative year-end reporting/fewer positive stories
+- A rise by March as companies announce new strategies and growth forecasts, including governments publishing new-year economic outlooks and investors returning to the market after holidays
+- Slight mid year decline as many countries experience an economic mid-year slowdown and there are possible downward revisions
+
 **Health**
 
 ```{r}
@@ -301,6 +354,8 @@ health_plot <- ggplot(health_df, aes(x = date)) +
 ggplotly(health_plot) %>%
   layout(hovermode = "x")
 ```
+
+*In the health category, there is a huge spike around July 2020 as multiple vaccine candidates for early COVID-19 vaccine breakthroughs are announced. The coverage also shifted from panic to progress and solutions. After that the sentiment drops to low levels reaching negative as the second and third COVID waves hit globally. Long COVID, healthcare shortages, and pandemic fatigue keep the sentiment low till late 2020 especially in the USA and China. Argentina had a positive sentiment category for most of the period. This might have been due to Argentina's news coverage being unusually government-optimistic by design and positivity inflation of the spanish language sentiment lexicons by the Vader packages*
 
 **Technology**
 
@@ -356,6 +411,8 @@ ggplotly(technology_plot) %>%
   layout(hovermode = "x")
 ```
 
+*The sentiment around tech articles appears to follow increased sentiment during the fall (Sept - Nov) during the major product launch season before a slight drop at the beginning of the year possible due to year in review critical pieces, layoffs, and new regulations. There is an increase in sentiment during the summer (June - Aug) due to developer conferences and positive innovation headlines*
+
 **Entertainment**
 
 ```{r}
@@ -409,6 +466,8 @@ entertainment_plot <- ggplot(entertainment_df, aes(x = date)) +
 ggplotly(entertainment_plot) %>%
   layout(hovermode = "x")
 ```
+
+*China and India have a positive sentiment in entertainment while the other countries have a moving average around neutral. This pattern might reflect cultural and structural differences in media reporting: both countries emphasize celebratory and promotional coverage of films, music, and celebrities.*
 
 **Sports**
 
@@ -464,6 +523,8 @@ ggplotly(sports_plot) %>%
   layout(hovermode = "x")
 ```
 
+*In sports, most countries have a positive sentiment, with China at a significantly higher moving average from other countries possible due to cultural differences. The spike in 2021-05 corresponds to the end of European football while the spike in 2021-09 corresponds to the start of many sports leagues (MLB, NFL, EPL)*
+
 **Science**
 
 ```{r}
@@ -517,6 +578,8 @@ science_plot <- ggplot(science_df, aes(x = date)) +
 ggplotly(science_plot) %>%
   layout(hovermode = "x")
 ```
+
+*Science sentiment shows a neutral moving average across time with a spike in 2020-07 due to early announcements of the COVID-19 breakthrough*
 
 # Analysis of sentiment and bias in USA news
 
@@ -594,6 +657,8 @@ df_countries %>%
   theme_minimal() +
   guides(fill = "none")
 ```
+
+*In general, science and sports have a higher moving average of sentiment across time due to the objective nature of science articles and exciting nature of entertainment headlines while general and health had the lowest sentiment due to the COVID-19 pandemic*
 
 ```{r}
 # Summary Sentiment statistics by category for USA
@@ -710,7 +775,577 @@ usa_bias_summary <- df_countries %>%
 print(usa_bias_summary)
 ```
 
-**Deep Dive into Health and Science trends during the pandemic**
+# Analysis Health, General, Science categories combined
+
+*In to capture the sentiment around COVID-19 and also leverage the scarse related data in the dataset, we have combined the Health, Science, and General category to explore the sentiment and bias during the COVID-19 pandemic (2020-02 to 2021-11)*
+
+```{r}
+# Combined time series plot for sentiment and bias across health, general, and science categories, daily
+
+# Prepare daily combined data for USA with both sentiment and bias for health, general, and science categories
+usa_combined_daily <- df_countries %>%
+  filter(location == "United States", category %in% c("health", "general", "science", "business")) %>%
+  group_by(publishedAt) %>%
+  summarise(
+    avg_sentiment = mean(compound, na.rm = TRUE),
+    avg_bias = mean(bias_score, na.rm = TRUE),
+    n_articles = n(),
+    .groups = 'drop'
+  ) %>%
+  rename(date = publishedAt) %>%
+  # Transform to long format for plotting
+  pivot_longer(
+    cols = c(avg_sentiment, avg_bias),
+    names_to = "metric",
+    values_to = "score"
+  ) %>%
+  mutate(
+    metric = case_when(
+      metric == "avg_sentiment" ~ "Sentiment",
+      metric == "avg_bias" ~ "Bias"
+    )
+  )
+
+head(usa_combined_daily)
+```
+
+```{r}
+# Create combined plot with dual y-axes
+
+# Create the base plot with sentiment and bias for combined health, general, and science categories
+usa_combined_plot <- ggplot(usa_combined_daily, aes(x = date, y = score, color = metric)) +
+  geom_line(size = 0.5, alpha = 0.7) +
+  facet_wrap(~ metric, scales = "free_y", ncol = 1) +
+  labs(
+    title = "Daily Sentiment and Bias Trends for USA Health, General & Science News",
+    subtitle = "From 2020 - 2021 (Combined Categories Analysis)",
+    x = "Date",
+    y = "Score",
+    color = "Metric"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    strip.text = element_text(face = "bold")
+  ) +
+  scale_x_date(,
+    date_breaks = "3 months", 
+    date_labels = "%Y-%m"
+  ) +
+  scale_color_manual(values = c("Sentiment" = "#2E86AB", "Bias" = "#A23B72"))
+
+ggplotly(usa_combined_plot) %>%
+  layout(hovermode = "x")
+```
+
+*Before 2020, the time series shows random bias and sentiment distribution*
+
+*After the first confirmed U.S. COVID-19 case, news sentiment started neutral as initial reporting was factual. A sharp negative drop in May 2020 coincided with rapidly rising cases and crises in hospitals. Optimism returned briefly in July 2020 due to early vaccine trial progress and partial reopening measures. Sentiment then stabilized around neutral with occasional negative dips, including during the December 2020 holiday surge. In 2021, coverage remained neutral to slightly negative, but July 2021 saw the lowest sentiment of the year, corresponding to the Delta variant surge and heightened public health concerns*
+
+*Sentiment during Christmas and New Year 2020–2021 was particularly low due to a combination of factors: a surge in COVID-19 cases following holiday gatherings, public health warnings discouraging travel and celebrations, widespread pandemic fatigue, and uncertainty surrounding the early vaccine rollout. Media coverage during this period was dominated by negative or cautionary language, leading to a pronounced dip in sentiment despite the holiday season.*
+
+```{r}
+# Decomposition of combined sentiment time series in the USA
+
+# Prepare monthly aggregated sentiment data for USA (health, general, science combined)
+usa_combined_monthly <- df_countries %>%
+  filter(location == "United States", category %in% c("health", "general", "science")) %>%
+  mutate(year_month = floor_date(publishedAt, "month")) %>%
+  group_by(year_month) %>%
+  summarise(avg_sentiment = mean(compound, na.rm = TRUE), .groups = 'drop') %>%
+  arrange(year_month)
+
+# Create time series object with monthly frequency
+combined_ts <- ts(usa_combined_monthly$avg_sentiment, start = c(2018, 1), frequency = 12)
+
+# Decompose (additive by default)
+dec <- decompose(combined_ts)
+```
+
+```{r}
+
+# Time index
+t <- time(combined_ts)
+
+# Make four simple plots
+p1 <- plot_ly(x = ~t, y = ~as.numeric(dec$x),        type = "scatter", mode = "lines", name = "Observed",  showlegend = FALSE)
+p2 <- plot_ly(x = ~t, y = ~as.numeric(dec$trend),    type = "scatter", mode = "lines", name = "Trend",     showlegend = FALSE)
+p3 <- plot_ly(x = ~t, y = ~as.numeric(dec$seasonal), type = "scatter", mode = "lines", name = "Seasonal",  showlegend = FALSE)
+p4 <- plot_ly(x = ~t, y = ~as.numeric(dec$random),   type = "scatter", mode = "lines", name = "Remainder", showlegend = FALSE)
+
+subplot(p1, p2, p3, p4, nrows = 4, shareX = TRUE) |>
+  layout(
+    title = "Decomposition of USA Combined Sentiment (Health, General, Science)",
+    xaxis  = list(title = "Year"),
+    yaxis  = list(title = "Observed", nticks = 5, tickfont = list(size = 10)),
+    yaxis2 = list(title = "Trend",    nticks = 5, tickfont = list(size = 10)),
+    yaxis3 = list(title = "Seasonal", nticks = 3, tickformat = ".3f", tickfont = list(size = 10)),
+    yaxis4 = list(title = "Remainder",nticks = 3, tickformat = ".3f", tickfont = list(size = 10)),
+    margin = list(l = 70, r = 10, t = 40, b = 40)
+  )
+
+```
+
+*The decomposition shows a gradual decline in overall news sentiment since 2015, reflecting increasingly neutral or negative coverage over time. Superimposed on this trend is a clear seasonal pattern, with predictable dips early in the year, spikes around mid-year events, smaller mid-year peaks, and another year-end spike likely tied to holidays or major announcements. These seasonal oscillations highlight the recurring rhythm of news sentiment in response to cyclical events.*
+
+```{r}
+# Decomposition of combined bias time series in the USA
+
+# Prepare monthly aggregated bias data for USA (health, general, science combined)
+usa_combined_bias_monthly <- df_countries %>%
+  filter(location == "United States", category %in% c("health", "general", "science")) %>%
+  mutate(year_month = floor_date(publishedAt, "month")) %>%
+  group_by(year_month) %>%
+  summarise(avg_bias = mean(bias_score, na.rm = TRUE), .groups = 'drop') %>%
+  arrange(year_month)
+
+# Create time series object with monthly frequency
+combined_bias_ts <- ts(usa_combined_bias_monthly$avg_bias, start = c(2018, 1), frequency = 12)
+
+# Decompose (additive by default)
+dec <- decompose(combined_bias_ts)
+```
+
+```{r}
+# Time index
+t <- time(combined_bias_ts)
+
+# Make four simple plots
+p1 <- plot_ly(x = ~t, y = ~as.numeric(dec$x),        type = "scatter", mode = "lines", name = "Observed",  showlegend = FALSE)
+p2 <- plot_ly(x = ~t, y = ~as.numeric(dec$trend),    type = "scatter", mode = "lines", name = "Trend",     showlegend = FALSE)
+p3 <- plot_ly(x = ~t, y = ~as.numeric(dec$seasonal), type = "scatter", mode = "lines", name = "Seasonal",  showlegend = FALSE)
+p4 <- plot_ly(x = ~t, y = ~as.numeric(dec$random),   type = "scatter", mode = "lines", name = "Remainder", showlegend = FALSE)
+
+subplot(p1, p2, p3, p4, nrows = 4, shareX = TRUE) |>
+  layout(
+    title = "Decomposition of USA Combined Bias (Health, General, Science)",
+    xaxis  = list(title = "Year"),
+    yaxis  = list(title = "Observed", nticks = 5, tickfont = list(size = 10)),
+    yaxis2 = list(title = "Trend",    nticks = 5, tickfont = list(size = 10)),
+    yaxis3 = list(title = "Seasonal", nticks = 3, tickformat = ".3f", tickfont = list(size = 10)),
+    yaxis4 = list(title = "Remainder",nticks = 3, tickformat = ".3f", tickfont = list(size = 10)),
+    margin = list(l = 70, r = 10, t = 40, b = 40)
+  )
+```
+
+```{r}
+# Create US data frame with publishedAt, category, year, month, avg_compound, and avg_bias
+
+# Create aggregated US data frame by date and category
+us_daily_combinedC_df <- df_countries %>%
+  filter(location == "United States", category %in% c("health", "general", "science")) %>%
+  group_by(publishedAt, category) %>%
+  summarise(
+    avg_compound = mean(compound, na.rm = TRUE),
+    avg_bias = mean(bias_score, na.rm = TRUE),
+    n_articles = n(),
+    .groups = 'drop'
+  ) %>%
+  mutate(
+    year = year(publishedAt),
+    month = month(publishedAt)
+  ) %>%
+  select(publishedAt, category, year, month, avg_compound, avg_bias, n_articles) %>%
+  arrange(publishedAt, category)
+
+# Display first few rows and summary
+head(us_daily_combinedC_df, 10)
+```
+
+```{r}
+# Extract day from date e.g., 1 for Sunday, 2 for Monday, etc.
+
+# Add day of week information to the US daily dataframe
+us_daily_combinedC_df <- us_daily_combinedC_df %>%
+  mutate(
+    # wday() returns 1 for Sunday, 2 for Monday, ..., 7 for Saturday
+    day_of_week = wday(publishedAt),
+    # wday() with label=TRUE, abbr=FALSE returns full day names  
+    day_full_name = wday(publishedAt, label = TRUE, abbr = FALSE)
+  )
+
+# Display updated dataframe with day information
+head(us_daily_combinedC_df, 10)
+```
+
+```{r}
+# Run a regression sentiment score on bias score, category, day_of_week
+
+us_sentiment_combinedC_model <- lm(avg_compound ~ avg_bias + as.factor(day_of_week) + as.factor(category), us_daily_combinedC_df)
+
+summary(us_sentiment_combinedC_model)
+```
+
+*The linear regression shows that headline category is the strongest predictor of daily average sentiment: science news is associated with the highest positive shift, followed by health news. Bias has a small positive effect on sentiment, though only marginally significant. Day-of-week effects are negligible. Overall, the model explains about 14% of the variation in daily sentiment, indicating that much of sentiment variation is driven by factors not captured in this model*
+
+```{r}
+# Convert residuals to time series component and look at the residuals ACF
+
+# Extract residuals from the regression model
+residuals_data <- residuals(us_sentiment_combinedC_model)
+
+# Create a dataframe with residuals and dates for proper ordering
+residuals_df <- data.frame(
+  residuals = residuals_data,
+  publishedAt = us_daily_combinedC_df$publishedAt,
+  category = us_daily_combinedC_df$category
+) %>%
+  arrange(publishedAt)
+
+# Convert residuals to time series object
+# Note: Since we have irregular time series (not every day has data for every category),
+# we'll work with the residuals as a vector for ACF analysis
+res_fit <- residuals_df$residuals
+
+# Create ACF plot for residuals
+acf_plot <- ggAcf(res_fit, lag.max = 40) +
+  labs(
+    title = "Autocorrelation Function (ACF) of Regression Residuals",
+    subtitle = "US Daily News Sentiment Model Residuals",
+    x = "Lag",
+    y = "ACF"
+  ) +
+  theme_minimal()
+
+print(acf_plot)
+```
+
+*The ACF plot of regression residuals shows low autocorrelation, with only three minor spikes outside the confidence bounds: at lag 2, and around lags 30–35. This indicates that the model largely captures the systematic variation in sentiment, and the residuals behave approximately as white noise. The spikes may reflect small short-term or monthly cycles in news sentiment not fully accounted for by the model*
+
+```{r}
+# Lag plot for sentiment in USA
+
+# Create a time series of daily average sentiment for USA
+usa_sentiment_combinedC_daily <- us_daily_combinedC_df %>%
+  group_by(publishedAt) %>%
+  summarise(
+    daily_avg_sentiment = mean(avg_compound, na.rm = TRUE),
+    .groups = 'drop'
+  ) %>%
+  arrange(publishedAt) %>%
+  filter(!is.na(daily_avg_sentiment))
+
+# Convert to time series object
+usa_sentiment_combinedC.ts <- ts(usa_sentiment_combinedC_daily$daily_avg_sentiment, frequency = 365)
+
+# Create lag plots with 4 different lags
+gglagplot(usa_sentiment_combinedC.ts, do.lines = FALSE, lags = 4) +
+  labs(
+    title = "Lag Plots: USA Daily Sentiment Analysis",
+    subtitle = "Autocorrelation patterns in daily sentiment data",
+    x = "Y(t-k)",
+    y = "Y(t)"
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(face = "bold"),
+    plot.title = element_text(size = 14, face = "bold"),
+    plot.subtitle = element_text(size = 12)
+  )
+```
+
+*The lag plot of daily sentiment shows points scattered around zero, forming a roughly circular pattern. This indicates that consecutive daily sentiment values are largely independent, with no strong linear autocorrelation. The circular scatter may hint at mild non-linear dependencies or recurring cycles, but overall, sentiment appears mostly driven by individual events rather than day-to-day persistence.*
+
+```{r}
+# Lag plot for bias in USA
+
+# Create a time series of daily average bias for USA
+usa_bias_combinedC_daily <- us_daily_combinedC_df %>%
+  group_by(publishedAt) %>%
+  summarise(
+    daily_avg_bias = mean(avg_bias, na.rm = TRUE),
+    .groups = 'drop'
+  ) %>%
+  arrange(publishedAt) %>%
+  filter(!is.na(daily_avg_bias))
+
+# Convert to time series object
+usa_bias_combinedC.ts <- ts(usa_bias_combinedC_daily$daily_avg_bias, frequency = 365)
+
+# Create lag plots with 4 different lags
+gglagplot(usa_bias_combinedC.ts, do.lines = FALSE, lags = 4) +
+  labs(
+    title = "Lag Plots: USA Daily Bias Analysis",
+    subtitle = "Autocorrelation patterns in daily bias data",
+    x = "Y(t-k)",
+    y = "Y(t)"
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(face = "bold"),
+    plot.title = element_text(size = 14, face = "bold"),
+    plot.subtitle = element_text(size = 12)
+  )
+```
+
+*The lag plot of daily bias shows points scattered around zero, forming a roughly circular pattern. This indicates that consecutive daily sentiment values are largely independent, with no strong linear autocorrelation. The circular scatter may hint at mild non-linear dependencies or recurring cycles, but overall, sentiment appears mostly driven by individual events rather than day-to-day persistence.*
+
+```{r}
+# ACF plot for USA daily sentiment
+ggAcf(usa_sentiment_combinedC_daily$daily_avg_sentiment, lag.max = 40) +
+  labs(
+    title = "Autocorrelation Function (ACF): USA Daily Sentiment",
+    subtitle = "Identifying temporal dependencies in daily sentiment data",
+    x = "Lag (days)",
+    y = "ACF"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    plot.subtitle = element_text(size = 12)
+  )
+```
+
+*The ACF of the daily sentiment series (lags 1–40) shows that most autocorrelations fall within the confidence bounds, indicating weak temporal dependence. Only five lags show significant autocorrelation, suggesting minor short-term or periodic effects in news sentiment. Overall, sentiment appears largely event-driven rather than strongly influenced by preceding days.*
+
+*While the sentiment series exhibits weak autocorrelation, the presence of seasonal cycles and minor short-term dependencies justifies exploring time series models, particularly ones that can incorporate exogenous event-related variables. Pure autoregressive models may have limited predictive power due to the event-driven nature of sentiment, but a seasonal or dynamic regression framework could improve forecasting and provide insight into temporal patterns*
+
+```{r}
+# PACF plot for USA daily sentiment
+ggPacf(usa_sentiment_combinedC_daily$daily_avg_sentiment, lag.max = 40) +
+  labs(
+    title = "Partial Autocorrelation Function (PACF): USA Daily Sentiment",
+    subtitle = "Identifying direct temporal relationships in daily sentiment data",
+    x = "Lag (days)",
+    y = "PACF"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    plot.subtitle = element_text(size = 12)
+  )
+```
+
+*The PACF of daily sentiment shows only four lags with significant partial autocorrelation, indicating that short-term dependencies exist for a few immediate days, but beyond that, sentiment behaves largely independently. This suggests that if a time series model is applied, only a low-order autoregressive component is needed, and incorporating seasonality or event-based regressors would likely provide more explanatory power.*
+
+# Analysis of top sources for health and science
+
+```{r}
+# View main sources of news for science and health category in the USA
+
+# Analyze top news sources for health and science categories
+usa_sources_health_science <- df_countries %>%
+  filter(location == "United States", category %in% c("health", "science")) %>%
+  group_by(category, `source-name`) %>%
+  summarise(
+    n_articles = n(),
+    avg_sentiment = mean(compound, na.rm = TRUE),
+    avg_bias = mean(bias_score, na.rm = TRUE),
+    .groups = 'drop'
+  ) %>%
+  arrange(category, desc(n_articles))
+
+# Get top 10 sources for each category
+top_sources_health <- usa_sources_health_science %>%
+  filter(category == "health") %>%
+  slice_head(n = 10)
+
+top_sources_science <- usa_sources_health_science %>%
+  filter(category == "science") %>%
+  slice_head(n = 10)
+
+# Display the results
+cat("Top 10 Health News Sources in USA (2020-2021):\n")
+print(top_sources_health)
+
+cat("\nTop 10 Science News Sources in USA (2020-2021):\n")
+print(top_sources_science)
+```
+
+```{r}
+# Create visualization for top news sources by article count
+
+# Health News Sources Visualization
+df_usa_health <- df_countries_2020 %>%
+  filter(location == "United States", category == "health")
+
+# Top 20 health news sources
+top_health_sources <- df_usa_health %>%
+  count(`source-name`, sort = TRUE) %>%
+  slice_head(n = 20)
+
+# Horizontal bar chart for health sources
+health_sources_plot <- plot_ly(
+  data = top_health_sources,
+  x = ~n,
+  y = ~reorder(`source-name`, n),
+  type = 'bar',
+  orientation = 'h',
+  marker = list(color = '#E74C3C'),
+  name = 'Health Sources'
+) %>%
+  layout(
+    title = list(
+      text = 'Top 20 USA Health News Sources by Article Count (2020-2021)',
+      font = list(family = "Times New Roman")
+    ),
+    xaxis = list(title = 'Article Count'),
+    yaxis = list(title = 'News Source'),
+    margin = list(l = 150)
+  )
+
+health_sources_plot
+```
+
+```{r}
+# Science News Sources Visualization
+df_usa_science <- df_countries_2020 %>%
+  filter(location == "United States", category == "science")
+
+# Top 20 science news sources
+top_science_sources <- df_usa_science %>%
+  count(`source-name`, sort = TRUE) %>%
+  slice_head(n = 20)
+
+# Horizontal bar chart for science sources
+science_sources_plot <- plot_ly(
+  data = top_science_sources,
+  x = ~n,
+  y = ~reorder(`source-name`, n),
+  type = 'bar',
+  orientation = 'h',
+  marker = list(color = '#3498DB'),
+  name = 'Science Sources'
+) %>%
+  layout(
+    title = list(
+      text = 'Top 20 USA Science News Sources by Article Count (2020-2021)',
+      font = list(family = "Times New Roman")
+    ),
+    xaxis = list(title = 'Article Count'),
+    yaxis = list(title = 'News Source'),
+    margin = list(l = 150)
+  )
+
+science_sources_plot
+```
+
+```{r}
+# Average Sentiment for top 5 health sources
+
+# Get top 5 health sources for sentiment analysis
+top_5_health_sentiment <- top_sources_health %>%
+  slice_head(n = 5)
+
+# Create vertical bar chart for health sentiment
+health_sentiment_plot <- plot_ly(
+  data = top_5_health_sentiment,
+  x = ~reorder(`source-name`, avg_sentiment),
+  y = ~avg_sentiment,
+  type = 'bar',
+  marker = list(color = '#27AE60'),
+  name = 'Health Sentiment',
+  text = ~paste("Articles:", n_articles, "<br>Sentiment:", round(avg_sentiment, 3)),
+  textposition = 'auto'
+) %>%
+  layout(
+    title = list(
+      text = 'Average Sentiment for Top 5 USA Health News Sources (2020-2021)',
+      font = list(family = "Times New Roman")
+    ),
+    xaxis = list(title = 'News Source'),
+    yaxis = list(title = 'Average Sentiment Score'),
+    margin = list(b = 100)
+  )
+
+health_sentiment_plot
+```
+
+```{r}
+# Average Bias for top 5 health sources
+
+# Get top 5 health sources for bias analysis
+top_5_health_bias <- top_sources_health %>%
+  slice_head(n = 5)
+
+# Create vertical bar chart for health bias
+health_bias_plot <- plot_ly(
+  data = top_5_health_bias,
+  x = ~reorder(`source-name`, avg_bias),
+  y = ~avg_bias,
+  type = 'bar',
+  marker = list(color = '#E67E22'),
+  name = 'Health Bias',
+  text = ~paste("Articles:", n_articles, "<br>Bias:", round(avg_bias, 3)),
+  textposition = 'auto'
+) %>%
+  layout(
+    title = list(
+      text = 'Average Bias for Top 5 USA Health News Sources (2020-2021)',
+      font = list(family = "Times New Roman")
+    ),
+    xaxis = list(title = 'News Source'),
+    yaxis = list(title = 'Average Bias Score'),
+    margin = list(b = 100)
+  )
+
+health_bias_plot
+```
+
+```{r}
+# Average Sentiment for top 5 science sources
+
+# Get top 5 science sources for sentiment analysis
+top_5_science_sentiment <- top_sources_science %>%
+  slice_head(n = 5)
+
+# Create vertical bar chart for science sentiment
+science_sentiment_plot <- plot_ly(
+  data = top_5_science_sentiment,
+  x = ~reorder(`source-name`, avg_sentiment),
+  y = ~avg_sentiment,
+  type = 'bar',
+  marker = list(color = '#8E44AD'),
+  name = 'Science Sentiment',
+  text = ~paste("Articles:", n_articles, "<br>Sentiment:", round(avg_sentiment, 3)),
+  textposition = 'auto'
+) %>%
+  layout(
+    title = list(
+      text = 'Average Sentiment for Top 5 USA Science News Sources (2020-2021)',
+      font = list(family = "Times New Roman")
+    ),
+    xaxis = list(title = 'News Source'),
+    yaxis = list(title = 'Average Sentiment Score'),
+    margin = list(b = 100)
+  )
+
+science_sentiment_plot
+```
+
+```{r}
+# Average Bias for top 5 science sources
+
+# Get top 5 science sources for bias analysis
+top_5_science_bias <- top_sources_science %>%
+  slice_head(n = 5)
+
+# Create vertical bar chart for science bias
+science_bias_plot <- plot_ly(
+  data = top_5_science_bias,
+  x = ~reorder(`source-name`, avg_bias),
+  y = ~avg_bias,
+  type = 'bar',
+  marker = list(color = '#E74C3C'),
+  name = 'Science Bias',
+  text = ~paste("Articles:", n_articles, "<br>Bias:", round(avg_bias, 3)),
+  textposition = 'auto'
+) %>%
+  layout(
+    title = list(
+      text = 'Average Bias for Top 5 USA Science News Sources (2020-2021)',
+      font = list(family = "Times New Roman")
+    ),
+    xaxis = list(title = 'News Source'),
+    yaxis = list(title = 'Average Bias Score'),
+    margin = list(b = 100)
+  )
+
+science_bias_plot
+```
+
+# Deep Dive into Health and Science trends during the pandemic
 
 ```{r}
 # Combined time series plot for sentiment and bias in the health category, daily
@@ -938,411 +1573,3 @@ subplot(p1, p2, p3, p4, nrows = 4, shareX = TRUE) |>
     margin = list(l = 70, r = 10, t = 40, b = 40)
   )
 ```
-
-**Analysis of top sources for health**
-
-```{r}
-# View main sources of news for science and health category in the USA
-
-# Analyze top news sources for health and science categories
-usa_sources_health_science <- df_countries %>%
-  filter(location == "United States", category %in% c("health", "science")) %>%
-  group_by(category, `source-name`) %>%
-  summarise(
-    n_articles = n(),
-    avg_sentiment = mean(compound, na.rm = TRUE),
-    avg_bias = mean(bias_score, na.rm = TRUE),
-    .groups = 'drop'
-  ) %>%
-  arrange(category, desc(n_articles))
-
-# Get top 10 sources for each category
-top_sources_health <- usa_sources_health_science %>%
-  filter(category == "health") %>%
-  slice_head(n = 10)
-
-top_sources_science <- usa_sources_health_science %>%
-  filter(category == "science") %>%
-  slice_head(n = 10)
-
-# Display the results
-cat("Top 10 Health News Sources in USA (2020-2021):\n")
-print(top_sources_health)
-
-cat("\nTop 10 Science News Sources in USA (2020-2021):\n")
-print(top_sources_science)
-```
-
-```{r}
-# Create visualization for top news sources by article count
-
-# Health News Sources Visualization
-df_usa_health <- df_countries_2020 %>%
-  filter(location == "United States", category == "health")
-
-# Top 20 health news sources
-top_health_sources <- df_usa_health %>%
-  count(`source-name`, sort = TRUE) %>%
-  slice_head(n = 20)
-
-# Horizontal bar chart for health sources
-health_sources_plot <- plot_ly(
-  data = top_health_sources,
-  x = ~n,
-  y = ~reorder(`source-name`, n),
-  type = 'bar',
-  orientation = 'h',
-  marker = list(color = '#E74C3C'),
-  name = 'Health Sources'
-) %>%
-  layout(
-    title = list(
-      text = 'Top 20 USA Health News Sources by Article Count (2020-2021)',
-      font = list(family = "Times New Roman")
-    ),
-    xaxis = list(title = 'Article Count'),
-    yaxis = list(title = 'News Source'),
-    margin = list(l = 150)
-  )
-
-health_sources_plot
-```
-
-```{r}
-# Science News Sources Visualization
-df_usa_science <- df_countries_2020 %>%
-  filter(location == "United States", category == "science")
-
-# Top 20 science news sources
-top_science_sources <- df_usa_science %>%
-  count(`source-name`, sort = TRUE) %>%
-  slice_head(n = 20)
-
-# Horizontal bar chart for science sources
-science_sources_plot <- plot_ly(
-  data = top_science_sources,
-  x = ~n,
-  y = ~reorder(`source-name`, n),
-  type = 'bar',
-  orientation = 'h',
-  marker = list(color = '#3498DB'),
-  name = 'Science Sources'
-) %>%
-  layout(
-    title = list(
-      text = 'Top 20 USA Science News Sources by Article Count (2020-2021)',
-      font = list(family = "Times New Roman")
-    ),
-    xaxis = list(title = 'Article Count'),
-    yaxis = list(title = 'News Source'),
-    margin = list(l = 150)
-  )
-
-science_sources_plot
-```
-
-```{r}
-# Average Sentiment for top 5 health sources
-
-# Get top 5 health sources for sentiment analysis
-top_5_health_sentiment <- top_sources_health %>%
-  slice_head(n = 5)
-
-# Create vertical bar chart for health sentiment
-health_sentiment_plot <- plot_ly(
-  data = top_5_health_sentiment,
-  x = ~reorder(`source-name`, avg_sentiment),
-  y = ~avg_sentiment,
-  type = 'bar',
-  marker = list(color = '#27AE60'),
-  name = 'Health Sentiment',
-  text = ~paste("Articles:", n_articles, "<br>Sentiment:", round(avg_sentiment, 3)),
-  textposition = 'auto'
-) %>%
-  layout(
-    title = list(
-      text = 'Average Sentiment for Top 5 USA Health News Sources (2020-2021)',
-      font = list(family = "Times New Roman")
-    ),
-    xaxis = list(title = 'News Source'),
-    yaxis = list(title = 'Average Sentiment Score'),
-    margin = list(b = 100)
-  )
-
-health_sentiment_plot
-```
-
-```{r}
-# Average Bias for top 5 health sources
-
-# Get top 5 health sources for bias analysis
-top_5_health_bias <- top_sources_health %>%
-  slice_head(n = 5)
-
-# Create vertical bar chart for health bias
-health_bias_plot <- plot_ly(
-  data = top_5_health_bias,
-  x = ~reorder(`source-name`, avg_bias),
-  y = ~avg_bias,
-  type = 'bar',
-  marker = list(color = '#E67E22'),
-  name = 'Health Bias',
-  text = ~paste("Articles:", n_articles, "<br>Bias:", round(avg_bias, 3)),
-  textposition = 'auto'
-) %>%
-  layout(
-    title = list(
-      text = 'Average Bias for Top 5 USA Health News Sources (2020-2021)',
-      font = list(family = "Times New Roman")
-    ),
-    xaxis = list(title = 'News Source'),
-    yaxis = list(title = 'Average Bias Score'),
-    margin = list(b = 100)
-  )
-
-health_bias_plot
-```
-
-```{r}
-# Average Sentiment for top 5 science sources
-
-# Get top 5 science sources for sentiment analysis
-top_5_science_sentiment <- top_sources_science %>%
-  slice_head(n = 5)
-
-# Create vertical bar chart for science sentiment
-science_sentiment_plot <- plot_ly(
-  data = top_5_science_sentiment,
-  x = ~reorder(`source-name`, avg_sentiment),
-  y = ~avg_sentiment,
-  type = 'bar',
-  marker = list(color = '#8E44AD'),
-  name = 'Science Sentiment',
-  text = ~paste("Articles:", n_articles, "<br>Sentiment:", round(avg_sentiment, 3)),
-  textposition = 'auto'
-) %>%
-  layout(
-    title = list(
-      text = 'Average Sentiment for Top 5 USA Science News Sources (2020-2021)',
-      font = list(family = "Times New Roman")
-    ),
-    xaxis = list(title = 'News Source'),
-    yaxis = list(title = 'Average Sentiment Score'),
-    margin = list(b = 100)
-  )
-
-science_sentiment_plot
-```
-
-```{r}
-# Average Bias for top 5 science sources
-
-# Get top 5 science sources for bias analysis
-top_5_science_bias <- top_sources_science %>%
-  slice_head(n = 5)
-
-# Create vertical bar chart for science bias
-science_bias_plot <- plot_ly(
-  data = top_5_science_bias,
-  x = ~reorder(`source-name`, avg_bias),
-  y = ~avg_bias,
-  type = 'bar',
-  marker = list(color = '#E74C3C'),
-  name = 'Science Bias',
-  text = ~paste("Articles:", n_articles, "<br>Bias:", round(avg_bias, 3)),
-  textposition = 'auto'
-) %>%
-  layout(
-    title = list(
-      text = 'Average Bias for Top 5 USA Science News Sources (2020-2021)',
-      font = list(family = "Times New Roman")
-    ),
-    xaxis = list(title = 'News Source'),
-    yaxis = list(title = 'Average Bias Score'),
-    margin = list(b = 100)
-  )
-
-science_bias_plot
-```
-
-# Time Series for sentiment in the USA
-
-```{r}
-# Create US data frame with publishedAt, category, year, month, avg_compound, and avg_bias
-
-# Create aggregated US data frame by date and category
-us_daily_df <- df_countries %>%
-  filter(location == "United States") %>%
-  group_by(publishedAt, category) %>%
-  summarise(
-    avg_compound = mean(compound, na.rm = TRUE),
-    avg_bias = mean(bias_score, na.rm = TRUE),
-    n_articles = n(),
-    .groups = 'drop'
-  ) %>%
-  mutate(
-    year = year(publishedAt),
-    month = month(publishedAt)
-  ) %>%
-  select(publishedAt, category, year, month, avg_compound, avg_bias, n_articles) %>%
-  arrange(publishedAt, category)
-
-# Display first few rows and summary
-head(us_daily_df, 10)
-```
-
-```{r}
-# Extract day from date e.g., 1 for Sunday, 2 for Monday, etc.
-
-# Add day of week information to the US daily dataframe
-us_daily_df <- us_daily_df %>%
-  mutate(
-    # wday() returns 1 for Sunday, 2 for Monday, ..., 7 for Saturday
-    day_of_week = wday(publishedAt),
-    # wday() with label=TRUE, abbr=FALSE returns full day names  
-    day_full_name = wday(publishedAt, label = TRUE, abbr = FALSE)
-  )
-
-# Display updated dataframe with day information
-head(us_daily_df, 10)
-```
-
-```{r}
-# Run a regression sentiment score on bias score, category, day_of_week
-
-us_sentiment_model <- lm(avg_compound ~ avg_bias + as.factor(day_of_week) + as.factor(category), us_daily_df)
-
-summary(us_sentiment_model)
-```
-
-```{r}
-# Convert residuals to time series component and look at the residuals ACF
-
-# Extract residuals from the regression model
-residuals_data <- residuals(us_sentiment_model)
-
-# Create a dataframe with residuals and dates for proper ordering
-residuals_df <- data.frame(
-  residuals = residuals_data,
-  publishedAt = us_daily_df$publishedAt,
-  category = us_daily_df$category
-) %>%
-  arrange(publishedAt)
-
-# Convert residuals to time series object
-# Note: Since we have irregular time series (not every day has data for every category),
-# we'll work with the residuals as a vector for ACF analysis
-res_fit <- residuals_df$residuals
-
-# Create ACF plot for residuals
-acf_plot <- ggAcf(res_fit, lag.max = 40) +
-  labs(
-    title = "Autocorrelation Function (ACF) of Regression Residuals",
-    subtitle = "US Daily News Sentiment Model Residuals",
-    x = "Lag",
-    y = "ACF"
-  ) +
-  theme_minimal()
-
-print(acf_plot)
-```
-
-```{r}
-# Lag plot for sentiment in USA
-
-# Create a time series of daily average sentiment for USA
-usa_sentiment_daily <- us_daily_df %>%
-  group_by(publishedAt) %>%
-  summarise(
-    daily_avg_sentiment = mean(avg_compound, na.rm = TRUE),
-    .groups = 'drop'
-  ) %>%
-  arrange(publishedAt) %>%
-  filter(!is.na(daily_avg_sentiment))
-
-# Convert to time series object
-usa_sentiment.ts <- ts(usa_sentiment_daily$daily_avg_sentiment, frequency = 365)
-
-# Create lag plots with 4 different lags
-gglagplot(usa_sentiment.ts, do.lines = FALSE, lags = 4) +
-  labs(
-    title = "Lag Plots: USA Daily Sentiment Analysis",
-    subtitle = "Autocorrelation patterns in daily sentiment data",
-    x = "Y(t-k)",
-    y = "Y(t)"
-  ) +
-  theme_minimal() +
-  theme(
-    strip.text = element_text(face = "bold"),
-    plot.title = element_text(size = 14, face = "bold"),
-    plot.subtitle = element_text(size = 12)
-  )
-```
-
-```{r}
-# Lag plot for bias in USA
-
-# Create a time series of daily average bias for USA
-usa_bias_daily <- us_daily_df %>%
-  group_by(publishedAt) %>%
-  summarise(
-    daily_avg_bias = mean(avg_bias, na.rm = TRUE),
-    .groups = 'drop'
-  ) %>%
-  arrange(publishedAt) %>%
-  filter(!is.na(daily_avg_bias))
-
-# Convert to time series object
-usa_bias.ts <- ts(usa_bias_daily$daily_avg_bias, frequency = 365)
-
-# Create lag plots with 4 different lags
-gglagplot(usa_bias.ts, do.lines = FALSE, lags = 4) +
-  labs(
-    title = "Lag Plots: USA Daily Bias Analysis",
-    subtitle = "Autocorrelation patterns in daily bias data",
-    x = "Y(t-k)",
-    y = "Y(t)"
-  ) +
-  theme_minimal() +
-  theme(
-    strip.text = element_text(face = "bold"),
-    plot.title = element_text(size = 14, face = "bold"),
-    plot.subtitle = element_text(size = 12)
-  )
-```
-
-```{r}
-# ACF plot for USA daily sentiment
-ggAcf(usa_sentiment_daily$daily_avg_sentiment, lag.max = 40) +
-  labs(
-    title = "Autocorrelation Function (ACF): USA Daily Sentiment",
-    subtitle = "Identifying temporal dependencies in daily sentiment data",
-    x = "Lag (days)",
-    y = "ACF"
-  ) +
-  theme_minimal() +
-  theme(
-    plot.title = element_text(size = 14, face = "bold"),
-    plot.subtitle = element_text(size = 12)
-  )
-```
-
-```{r}
-# PACF plot for USA daily sentiment
-ggPacf(usa_sentiment_daily$daily_avg_sentiment, lag.max = 40) +
-  labs(
-    title = "Partial Autocorrelation Function (PACF): USA Daily Sentiment",
-    subtitle = "Identifying direct temporal relationships in daily sentiment data",
-    x = "Lag (days)",
-    y = "PACF"
-  ) +
-  theme_minimal() +
-  theme(
-    plot.title = element_text(size = 14, face = "bold"),
-    plot.subtitle = element_text(size = 12)
-  )
-```
-
-
-
-

@@ -10,6 +10,7 @@ Due to the massive amounts of data in each parquet file, I chose to read in each
 ```{r}
 library(arrow) #Library Needed to Read Parquet Files in R
 library(dplyr)
+library(effectsize)
 options(arrow.skip_nul = TRUE)
 ```
 
@@ -58,24 +59,6 @@ head(df_canada)
 
 Within our data, Sentiment in news articles is split into 3 sections: negative sentiment, neutral sentiment, and positive sentiment, but also gives us a 'compound sentiment score' that grades the aritcle's headline from a score of -1 to 1.   
 
-```{r}
-x <- sum(df_america$pos)
-y <- sum(df_america$neg)
-z <- sum(df_america$compound)
-
-(x-y)/z
-
-a <- sum(df_russia$pos)
-b <- sum(df_russia$neg)
-c <- sum(df_russia$compound)
-a
-b
-c
-(a-b)/c
-
-mean(df_america$compound)
-mean(df_russia$compound)
-```
 
 
 H0: The mean compound sentiment score for recorded articles in the United States before 2023 is 0 ($\mu_C =0$)
@@ -155,7 +138,7 @@ ANOVA 1: Does Compund Sentiment Score Differ by Country?
 
 While it is interesting that there is statistical evidence of a difference in mean compound sentiment scores between Russian article headlines and United States article headlines, We are curious to see if this applies to every country.  Therefore, we decided to combine all of our data frames into one and ran an ANOVA test to see if this applies to every country.
 
-H0: All counties in our data have equal mean compound sentiment scores 
+H0: All countries in our data have equal mean compound sentiment scores 
 Ha: At least one country has a different mean compound sentiment score
 
 ```{r}
@@ -168,21 +151,24 @@ anova_compound_country <- aov(compound ~location, data=df_all_countries)
 summary(anova_compound_country)
 
 TukeyHSD(anova_compound_country)
+eta_squared(anova_compound_country)
 ```
 
 Conclusion: We can reject H0 and conclude that there are statistically significant differences in mean compound sentiment scores across countries, with our TukeyHSD shows which specific country pairs differ significantly.
 
-ANOVA 2: Does An Article's Category Determine Its Compound Sentiment Score?
+ANOVA 2: Does An Article's Country * Category Determine Its Compound Sentiment Score?
 
 After proving that where an article is published affects its Mean Compound Sentiment Score, we became curious to see if the category/genre also affects an article's compound sentiment score.
 
-H0: All article categories have equal mean sentiment
+H0: All article categories * countries have equal mean sentiment
 Ha: At least one article category has a different mean compound sentiment score
 
 ```{r}
-anova_compound_category <- aov(compound ~ category, data = df_all_countries)
-summary(anova_compound_category)
-TukeyHSD(anova_compound_category)
+anova_compound_country_category <- aov(compound ~ category * location, data = df_all_countries)
+summary(anova_compound_country_category)
+TukeyHSD(anova_compound_country_category)
+table(df_all_countries$location, df_all_countries$category)
+eta_squared(anova_compound_country_category)
 ```
 
 Conclusion: Reject Null Hypothesis, Article category significantly affects compound sentiment scores

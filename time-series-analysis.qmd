@@ -65,7 +65,6 @@ cat("Date type conversion completed:\n")
 cat("publishedAt column type for US data:", class(us_df$publishedAt), "\n")
 ```
 
-
 ```{r}
 # Check date range for various country data
 
@@ -107,7 +106,6 @@ cat("Countries included:", unique(df_countries$location), "\n")
 df_countries_2020 <- df_countries %>% filter(year > 2019)
 ```
 
-
 # Overall country sentiment trends by category
 
 ```{r}
@@ -124,12 +122,9 @@ df_countries %>%
   guides(fill = "none")  
 ```
 
-*The average sentiment across all categories is neutral (~0).*
+*The average sentiment across all categories is neutral (\~0).*
 
-*NOTE: Typical threshold values (used in literature cited on the vaderSentiment documentation) are:*
-- *Positive sentiment: compound score >= 0.05*
-- *Neutral sentiment: compound score > -0.05 and compound score < 0.05*
-- *Negative sentiment: compound score <= -0.05*
+*NOTE: Typical threshold values (used in literature cited on the vaderSentiment documentation) are:* - *Positive sentiment: compound score \>= 0.05* - *Neutral sentiment: compound score \> -0.05 and compound score \< 0.05* - *Negative sentiment: compound score \<= -0.05*
 
 **General Category**
 
@@ -188,7 +183,7 @@ ggplotly(general_plot) %>%
   layout(hovermode = "x")
 ```
 
-*In the general news category, most countries have an average sentiment score of neutral (-0.05 < compound score < 0.05) except for the USA and China. China sentiment score is significant more positive (>0.05) while the USA sentiment score leans into negative across time (<0.05)*
+*In the general news category, most countries have an average sentiment score of neutral (-0.05 \< compound score \< 0.05) except for the USA and China. China sentiment score is significant more positive (\>0.05) while the USA sentiment score leans into negative across time (\<0.05)*
 
 *The observation about China might be due to state controlled media resulting in positive news most of the time. The observation about the US might be due to how polarized the US is leading to constant feed of slightly negative news in general.*
 
@@ -1342,7 +1337,3 @@ ggPacf(usa_sentiment_daily$daily_avg_sentiment, lag.max = 40) +
     plot.subtitle = element_text(size = 12)
   )
 ```
-
-
-
-

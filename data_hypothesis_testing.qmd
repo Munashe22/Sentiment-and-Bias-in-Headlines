@@ -6,11 +6,13 @@ format: html
 
 Reading in Sentiment Data
 
-Due to the massive amounts of data in each parquet file, I chose to read in each file as a separate R statement for the sake of my laptop not exploding.
+
 ```{r}
 library(arrow) #Library Needed to Read Parquet Files in R
 library(dplyr)
 library(effectsize)
+library(ggplot2)
+library(reshape2)
 options(arrow.skip_nul = TRUE)
 ```
 
@@ -120,16 +122,8 @@ summary(Russian_Sentiment_Means)
 t.test(Russian_Sentiment_Means, US_Sentiment_Means)
 ```
 
-        Welch Two Sample t-test
 
-data:  Russian_Sentiment_Means and US_Sentiment_Means
-t = 33.217, df = 1995.9, p-value < 2.2e-16
-alternative hypothesis: true difference in means is not equal to 0
-95 percent confidence interval:
- 0.01569524 0.01766482
-sample estimates:
-  mean of x   mean of y 
-0.025119650 0.008439616 
+
 
 Because our p-value is less than 2.2e-16, we can reject our null hypothesis at the 0.05 level and conclude that there is statistical evidence that the mean compound sentiment score of Russian article headlines is different than the mean compound sentiment score of United States article headlines.  Furthermore, based on our 95% confidence interval, we can also conclude that the true difference in mean compound sentiment scores between Russian article headlines and US article headlines is between 0.015 and 0.017
 
@@ -145,7 +139,9 @@ Ha: At least one country has a different mean compound sentiment score
 df_all_countries <- rbind(df_america, df_china, df_russia, df_canada, df_india, df_italy, df_argentina)
 counts <- as.data.frame(table(df_all_countries$location))
 counts
+```
 
+```{r}
 
 anova_compound_country <- aov(compound ~location, data=df_all_countries)
 summary(anova_compound_country)
@@ -154,9 +150,18 @@ TukeyHSD(anova_compound_country)
 eta_squared(anova_compound_country)
 ```
 
-Conclusion: We can reject H0 and conclude that there are statistically significant differences in mean compound sentiment scores across countries, with our TukeyHSD shows which specific country pairs differ significantly.
+Conclusion: We can reject H0 and conclude that there are statistically significant differences in bias scores across countries, with our TukeyHSD shows which specific country pairs differ significantly.
 
-ANOVA 2: Does An Article's Country * Category Determine Its Compound Sentiment Score?
+
+```{r}
+anova_bias_country <- aov(bias_score ~location, data=df_all_countries)
+summary(anova_bias_country)
+
+TukeyHSD(anova_bias_country)
+eta_squared(anova_bias_country)
+```
+
+ANOVA 3: Does An Article's Country * Category Determine Its Compound Sentiment Score?
 
 After proving that where an article is published affects its Mean Compound Sentiment Score, we became curious to see if the category/genre also affects an article's compound sentiment score.
 
@@ -166,9 +171,75 @@ Ha: At least one article category has a different mean compound sentiment score
 ```{r}
 anova_compound_country_category <- aov(compound ~ category * location, data = df_all_countries)
 summary(anova_compound_country_category)
-TukeyHSD(anova_compound_country_category)
+p <- TukeyHSD(anova_compound_country_category)
 table(df_all_countries$location, df_all_countries$category)
 eta_squared(anova_compound_country_category)
+```
+
+Significant US Health Articles:
+ Health US: Health China
+ Health US: General Italy
+ Health US: General Russian
+ Health US: Health Russian
+
+```{r}
+file_content <- readLines("data/Tukey_HSD_p_values.txt")
+head(file_content, 50)
+
+
+lines <- readLines("data/Tukey_HSD_p_values.txt")
+cat("Total lines in file:", length(lines), "\n")
+
+comparisons <- character(length(lines))
+p_values <- numeric(length(lines))
+
+for(i in 1:length(lines)) {
+  line <- trimws(lines[i])  
+  if(nchar(line) > 0) {
+    parts <- strsplit(line, "\\s{2,}")[[1]]  
+    if(length(parts) >= 2) {
+      comparisons[i] <- trimws(parts[1])
+      p_values[i] <- as.numeric(trimws(parts[length(parts)]))
+    } else {
+      words <- strsplit(line, "\\s+")[[1]]
+      if(length(words) >= 2) {
+        comparisons[i] <- paste(words[1:(length(words)-1)], collapse = " ")
+        p_values[i] <- as.numeric(words[length(words)])
+      }
+    }
+  }
+}
+
+tukey_df <- data.frame(
+  comparison = comparisons,
+  p.adj = p_values,
+  stringsAsFactors = FALSE
+)
+
+cat("Lines parsed:", length(lines), "\n")
+cat("Valid comparisons:", sum(nchar(tukey_df$comparison) > 0), "\n")
+cat("Valid p-values:", sum(!is.na(tukey_df$p.adj)), "\n")
+
+tukey_df <- tukey_df[!is.na(tukey_df$p.adj), ]
+colnames(tukey_df)[1] <- "category:country-category:country"
+
+str(tukey_df)
+head(tukey_df, 10)
+dim(tukey_df)
+
+cat("Summary of adjusted p-values:\n")
+summary(tukey_df$p.adj)
+cat("\nNumber of significant comparisons (p < 0.05):", sum(tukey_df$p.adj < 0.05, na.rm = TRUE))
+cat("\nTotal number of comparisons:", nrow(tukey_df))
+cat("\nProportion significant:", round(sum(tukey_df$p.adj < 0.05, na.rm = TRUE)/nrow(tukey_df), 3))
+
+hist(tukey_df$p.adj, 
+     main = "Distribution of 1000+ p-values", 
+     xlab = "p-value",
+     breaks = 50,
+     col = "lightblue")
+
+abline(v = 0.05, col = "red", lwd = 2, lty = 2)
 ```
 
 Conclusion: Reject Null Hypothesis, Article category significantly affects compound sentiment scores
@@ -187,6 +258,29 @@ chi_sentiment_bias <- chisq.test(all_sentiment_bias)
 chi_sentiment_bias
 print(round(chi_sentiment_bias$expected))
 print(round(chi_sentiment_bias$residuals))
+```
+
+
+```{r}
+all_sentiment_bias <- table(df_all_countries$sentiment_category, df_all_countries$bias_category)
+
+sentiment_bias_df <- as.data.frame(all_sentiment_bias)
+colnames(sentiment_bias_df) <- c("Sentiment", "Bias", "Frequency")
+
+p1 <- ggplot(sentiment_bias_df, aes(x = Bias, y = Sentiment, fill = Frequency)) +
+  geom_tile(color = "white", size = 0.5) +
+  geom_text(aes(label = Frequency), color = "white", size = 4, fontface = "bold") +
+  scale_fill_gradient(low = "lightblue", high = "darkblue") +
+  labs(title = "Sentiment Category vs Bias Category",
+       subtitle = paste("Chi-square =", round(chi_sentiment_bias$statistic, 2), 
+                       ", p-value =", format(chi_sentiment_bias$p.value, scientific = TRUE)),
+       x = "Bias Category",
+       y = "Sentiment Category") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 14),
+        plot.subtitle = element_text(hjust = 0.5, size = 12))
+
+print(p1)
 ```
 
 Conclusion: they are associated

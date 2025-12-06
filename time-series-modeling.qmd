@@ -1,7 +1,10 @@
 ---
 title: "Time Series Analysis"
-format: html
+format: 
+  html:
+    embed-resources: true
 editor: visual
+toc: true
 ---
 
 ## Introduction
@@ -319,7 +322,7 @@ cat("\nFirst 6 values of bias_monthly_ts:\n")
 print(head(bias_monthly_ts))
 ```
 
-**Series Visualization**
+# Series Visualization
 
 ```{r}
 # Plot daily sentiment
@@ -461,7 +464,7 @@ cat("Monthly Bias:     ", ifelse(adf_monthly_bias$p.value < 0.05, "STATIONARY", 
     " (p =", round(adf_monthly_bias$p.value, 4), ")\n")
 ```
 
-**Differencing**
+# Differencing of time series
 
 ```{r}
 # Difference the data
@@ -553,15 +556,13 @@ if(adf_diff_monthly_bias$p.value < 0.05) {
 cat("\n=== Summary of Differencing Results ===\n")
 cat("Differenced Daily Sentiment:   ", ifelse(adf_diff_daily_sentiment$p.value < 0.05, "STATIONARY", "NON-STATIONARY"), 
     " (p =", round(adf_diff_daily_sentiment$p.value, 4), ")\n")
-cat("Differenced Daily Bias:        ", ifelse(adf_diff_daily_bias$p.value < 0.05, "STATIONARY", "NON-STATIONARY"), 
-    " (p =", round(adf_diff_daily_bias$p.value, 4), ")\n")
 cat("Differenced Monthly Sentiment: ", ifelse(adf_diff_monthly_sentiment$p.value < 0.05, "STATIONARY", "NON-STATIONARY"), 
     " (p =", round(adf_diff_monthly_sentiment$p.value, 4), ")\n")
 cat("Differenced Monthly Bias:      ", ifelse(adf_diff_monthly_bias$p.value < 0.05, "STATIONARY", "NON-STATIONARY"), 
     " (p =", round(adf_diff_monthly_bias$p.value, 4), ")\n")
 ```
 
-**ACF Plots of differenced series**
+# ACF Plots of differenced series
 
 ```{r}
 # Load patchwork library for combining plots
@@ -614,7 +615,7 @@ pacf_daily_sentiment / pacf_monthly_sentiment / pacf_monthly_bias
 
 *The ACF and PACF plot of the differenced monthly sentiment and bias show that most autocorrelations fall within the significance bounds after the first few lags*
 
-**Second order differencing for daily sentiment**
+# Second order differencing for daily sentiment
 
 ```{r}
 # Second-order differencing for daily sentiment
@@ -676,7 +677,7 @@ Parameter choices
 - p (AR order): From the PACF plots, we see significant spikes at lags 1 and 2 so we will test p = 0, 1, 2
 - q (MA order) : From the ACF plot, we see a signficant correlation at lag 1 so we will test q = 0,1,2
 
-**Parameter search for monthly sentiment**
+# Parameter search for monthly sentiment
 
 ```{r}
 # Model 1: ARIMA (0,1,0)
@@ -948,6 +949,176 @@ autoplot(sentiment_monthly_ts) +
   autolayer(forecast(best_manual_fit, h = 60), series = "Manual ARIMA", PI = FALSE) +
   ggtitle("Sentiment Forecast Comparison") +
   xlab("Time") + ylab("Sentiment (health, science, and general category)") +
+  guides(colour = guide_legend(title = "Forecast Methods")) +
+  theme_minimal()
+```
+
+
+# Parameter search for monthly bias
+
+```{r}
+# Model 1: ARIMA (0,1,0)
+model1 <- Arima(bias_monthly_ts, order = c(0, 1, 0), include.drift = FALSE)
+summary(model1)
+```
+
+```{r}
+# Model 2: ARIMA (1,1,0)
+model2 <- Arima(bias_monthly_ts, order = c(1, 1, 0), include.drift = FALSE)
+summary(model2)
+```
+
+```{r}
+# Model 3: ARIMA (2,1,0)
+model3 <- Arima(bias_monthly_ts, order = c(2, 1, 0), include.drift = FALSE)
+summary(model3)
+```
+
+```{r}
+# Model 4: ARIMA (0,1,1)
+model4 <- Arima(bias_monthly_ts, order = c(0, 1, 1), include.drift = FALSE)
+summary(model4)
+```
+
+```{r}
+# Model 5: ARIMA (0,1,2)
+model5 <- Arima(bias_monthly_ts, order = c(0, 1, 2), include.drift = FALSE)
+summary(model5)
+```
+
+```{r}
+# Model 6: ARIMA (1,1,1)
+model6 <- Arima(bias_monthly_ts, order = c(1, 1, 1), include.drift = FALSE)
+summary(model6)
+```
+
+```{r}
+# Model 7: ARIMA (1,1,2)
+model7 <- Arima(bias_monthly_ts, order = c(1, 1, 2), include.drift = FALSE)
+summary(model7)
+```
+
+```{r}
+# Model 8: ARIMA (2,1,2)
+model8 <- Arima(bias_monthly_ts, order = c(2, 1, 2), include.drift = FALSE)
+summary(model8)
+```
+
+*Model 1 : ARIMA (0,1,1) has the lowest AIC indicating to be the best model for bias according to this manual selection process*
+
+**Auto selection of best model**
+
+```{r}
+auto_bias_monthly.model <- auto.arima(bias_monthly_ts, seasonal = FALSE)
+cat("Auto-selected model:", auto_bias_monthly.model$arma[1], auto_bias_monthly.model$arma[6], auto_bias_monthly.model$arma[2])
+```
+
+```{r}
+summary(auto_bias_monthly.model)
+```
+
+*The auto selected model is ARIMA(4,0,1)*
+
+**Model diagnostics to get best best model**
+
+Manual model:
+
+```{r}
+model_manual_bias <- capture.output(sarima(bias_monthly_ts, 0,1,1))
+```
+
+- The residual plot does not show consistent fluctuation around zero and no constant variation which shows that the model might need improvement
+- The ACF plot does not reveal any significant correlations 
+- The Q-Q plot indicates that the residuals follow a slightly near-normal distribution, with major deviations at the tails, 
+- The Ljung-Box Test p-values remain mostly above the 0.05 significance level, implying no significant autocorrelations left in the residuals and concluding that the model is adequate
+
+Auto model:
+```{r}
+model_auto_bias <- capture.output(sarima(bias_monthly_ts, 4,0,1))
+```
+
+- The residual plot does not show consistent fluctuation around zero and no constant variation which shows that the model might need improvement
+- The ACF plot does not reveal any significant correlations 
+- The Q-Q plot indicates that the residuals follow a near-normal distribution, with minor deviations at the tails, 
+- The Ljung-Box Test p-values remain mostly above the 0.05 significance level, implying  no significant autocorrelations left in the residuals and concluding that the model might be adequate
+
+**Both models perform similarly, with the residual, acf, and normal q-q plot very similar. The Ljung-Box statistic plot with the automatic plot producing p-values that are significantly > 0.05**
+
+# Benchmark methods and models
+
+
+```{r}
+# Define model orders for comparison
+manual_order <- c(0, 1, 1)
+auto_order <- c(4, 0, 1)
+```
+
+```{r}
+# Split data for evaluation (use last 6 observations for testing)
+n <- length(bias_monthly_ts)
+train_data <- bias_monthly_ts[1:(n-6)]
+test_data <- bias_monthly_ts[(n-5):n]
+
+# Fit manual model on training data
+manual_arima <- Arima(train_data, order = manual_order, include.drift = FALSE)
+manual_forecast <- forecast(manual_arima, h = 6)
+
+# Fit automatic model on training data
+auto_arima <- Arima(train_data, order = auto_order, include.drift = FALSE)
+auto_forecast <- forecast(auto_arima, h = 6)
+```
+
+
+```{r}
+# Benchmark methods
+# Naive method
+naive_forecast <- naive(train_data, h = 6)
+
+# Mean method  
+mean_forecast <- meanf(train_data, h = 6)
+
+# Random walk with drift
+rwf_forecast <- rwf(train_data, h = 6, drift = TRUE)
+
+# Calculate accuracy measures
+manual_accuracy <- accuracy(manual_forecast, test_data)
+auto_accuracy <- accuracy(auto_forecast, test_data)
+naive_accuracy <- accuracy(naive_forecast, test_data)
+mean_accuracy <- accuracy(mean_forecast, test_data)
+rwf_accuracy <- accuracy(rwf_forecast, test_data)
+
+# Create comparison table
+comparison <- data.frame(
+  Method = c("Manual ARIMA", "Auto ARIMA", "Naive", "Mean", "RWF with Drift"),
+  MAE = c(manual_accuracy[2,3], auto_accuracy[2,3], naive_accuracy[2,3], mean_accuracy[2,3], rwf_accuracy[2,3]),
+  RMSE = c(manual_accuracy[2,2], auto_accuracy[2,2], naive_accuracy[2,2], mean_accuracy[2,2], rwf_accuracy[2,2]),
+  MAPE = c(manual_accuracy[2,5], auto_accuracy[2,5], naive_accuracy[2,5], mean_accuracy[2,5], rwf_accuracy[2,5])
+)
+```
+
+```{r}
+knitr::kable(comparison, digits = 3, caption = "Model Performance Comparison")
+```
+
+*The Naive model has a lower MAE, RMSE, and MAPE, outperforming both the Manual ARIMA and Auto Arima*
+
+**Plot forecasts with manual arima as chosen model to include with baseline models as it outperforms auto arima**
+
+
+```{r}
+# Forecast visualization
+
+# Fit the best manual model on full data
+best_manual_fit <- Arima(bias_monthly_ts, order = manual_order, include.drift = FALSE)
+
+# Create forecast plot comparing all methods
+autoplot(bias_monthly_ts) +
+  autolayer(meanf(bias_monthly_ts, h = 60), series = "Mean", PI = FALSE) +
+  autolayer(naive(bias_monthly_ts, h = 60), series = "Naïve", PI = FALSE) +
+  autolayer(rwf(bias_monthly_ts, drift = TRUE, h = 60), series = "RWF with Drift", PI = FALSE) +
+  autolayer(forecast(best_manual_fit, h = 60), series = "Manual ARIMA", PI = FALSE) +
+  ggtitle("Bias Forecast Comparison") +
+  xlab("Time") + ylab("Bias (health, science, and general category)") +
   guides(colour = guide_legend(title = "Forecast Methods")) +
   theme_minimal()
 ```

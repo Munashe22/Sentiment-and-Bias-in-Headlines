@@ -1,7 +1,10 @@
 ---
 title: "Time Series Analysis"
-format: html
+format: 
+  html:
+    embed-resources: true
 editor: visual
+toc: true
 ---
 
 ## Introduction

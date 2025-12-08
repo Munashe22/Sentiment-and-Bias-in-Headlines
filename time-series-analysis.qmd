@@ -1084,6 +1084,10 @@ gglagplot(usa_bias_combinedC.ts, do.lines = FALSE, lags = 4) +
 
 *The lag plot of daily bias shows points scattered around zero, forming a roughly circular pattern. This indicates that consecutive daily sentiment values are largely independent, with no strong linear autocorrelation. The circular scatter may hint at mild non-linear dependencies or recurring cycles, but overall, sentiment appears mostly driven by individual events rather than day-to-day persistence.*
 
+**ACF and PACF plots**
+
+*Sentiment plots*
+
 ```{r}
 # ACF plot for USA daily sentiment
 ggAcf(usa_sentiment_combinedC_daily$daily_avg_sentiment, lag.max = 40) +
@@ -1121,6 +1125,44 @@ ggPacf(usa_sentiment_combinedC_daily$daily_avg_sentiment, lag.max = 40) +
 ```
 
 *The PACF of daily sentiment shows only four lags with significant partial autocorrelation, indicating that short-term dependencies exist for a few immediate days, but beyond that, sentiment behaves largely independently. This suggests that if a time series model is applied, only a low-order autoregressive component is needed, and incorporating seasonality or event-based regressors would likely provide more explanatory power.*
+
+*Bias plots*
+
+```{r}
+# ACF plot for USA daily sentiment
+ggAcf(usa_bias_combinedC_daily$daily_avg_bias, lag.max = 40) +
+  labs(
+    title = "Autocorrelation Function (ACF): USA Daily Bias",
+    subtitle = "Identifying temporal dependencies in daily bias data",
+    x = "Lag (days)",
+    y = "ACF"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    plot.subtitle = element_text(size = 12)
+  )
+```
+
+*The ACF of the daily bias series (lags 1–40) shows that most autocorrelations fall within the confidence bounds, indicating weak temporal dependence. Only three lags show significant autocorrelation, suggesting minor short-term or periodic effects in news bias. Overall, bias appears largely event-driven rather than strongly influenced by preceding days.*
+
+```{r}
+# PACF plot for USA daily bias
+ggPacf(usa_bias_combinedC_daily$daily_avg_bias, lag.max = 40) +
+  labs(
+    title = "Partial Autocorrelation Function (PACF): USA Daily bias",
+    subtitle = "Identifying direct temporal relationships in daily bias data",
+    x = "Lag (days)",
+    y = "PACF"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    plot.subtitle = element_text(size = 12)
+  )
+```
+
+*The PACF of daily sentiment shows only two lags with significant partial autocorrelation, indicating that short-term dependencies exist for a few immediate days, but beyond that, bias behaves largely independently. This suggests that if a time series model is applied, only a low-order autoregressive component is needed, and incorporating seasonality or event-based regressors would likely provide more explanatory power.*
 
 # Analysis of top sources for health and science
 

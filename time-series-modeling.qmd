@@ -871,7 +871,7 @@ model_auto_sentiment <- capture.output(sarima(sentiment_monthly_ts, 1,0,1))
 
 **Both models perform similarly, with the residual, acf, and normal q-q plot almost identical. The only different plots are the Ljung-Box statistic plot with the automatic plot producing p-values that are significantly \> 0.05**
 
-# Benchmark methods and models
+# Benchmark methods and models for sentiment
 
 ```{r}
 # Define model orders for comparison
@@ -998,7 +998,7 @@ model8 <- Arima(bias_monthly_ts, order = c(2, 1, 2), include.drift = FALSE)
 summary(model8)
 ```
 
-*Model 1 : ARIMA (0,1,1) has the lowest AIC indicating to be the best model for bias according to this manual selection process*
+*Model 1 : ARIMA (1,1,2) has the lowest AIC indicating to be the best model for bias according to this manual selection process*
 
 **Auto selection of best model**
 
@@ -1018,7 +1018,7 @@ summary(auto_bias_monthly.model)
 Manual model:
 
 ```{r}
-model_manual_bias <- capture.output(sarima(bias_monthly_ts, 0,1,1))
+model_manual_bias <- capture.output(sarima(bias_monthly_ts, 1,1,2))
 ```
 
 - The residual plot does not show consistent fluctuation around zero and no constant variation which shows that the model might need improvement
@@ -1038,12 +1038,11 @@ model_auto_bias <- capture.output(sarima(bias_monthly_ts, 4,0,1))
 
 **Both models perform similarly, with the residual, acf, and normal q-q plot very similar. The Ljung-Box statistic plot with the automatic plot producing p-values that are significantly > 0.05**
 
-# Benchmark methods and models
-
+# Benchmark methods and models for bias
 
 ```{r}
 # Define model orders for comparison
-manual_order <- c(0, 1, 1)
+manual_order <- c(1, 1, 2)
 auto_order <- c(4, 0, 1)
 ```
 

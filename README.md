@@ -28,3 +28,4 @@ In our work, bias refers not to statistical bias like sampling bias, measurement
 **U.S. news sentiment has declined over time and is event-driven, while bias is relatively stable.** Time series analysis shows a downward trend in sentiment aligned with major events such as COVID-19 and political cycles, whereas bias exhibits weaker trends and greater stability, suggesting that emotional tone may play a larger role than ideological slant in shaping media impact.
 
 ![Header](poster.png)
+
